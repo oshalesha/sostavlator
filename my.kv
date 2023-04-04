@@ -1,0 +1,32 @@
+MDFloatLayout:
+
+    MDRaisedButton:
+        text: "Open Date Picker"
+        pos_hint: {'center_x': 0.25, 'center_y': 0.67}
+        size_hint: 0.3, 0.15
+        on_release: app.show_date_picker()
+
+
+    MDRaisedButton:
+        text: "Add Note"
+        pos_hint: {'center_x': 0.25, 'center_y': 0.33}
+        size_hint: 0.3, 0.15
+        on_release: app.show_note_dialog()
+
+<NoteDialog@Popup>:
+    title: "Add Note"
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDTextField:
+            id: note_text
+            hint_text: "Enter your note here"
+            size_hint: 1, 0.8
+            multiline: True
+
+        MDRaisedButton:
+            text: "Save"
+            size_hint: 1, 0.2
+            on_release: app.save_note()
+
