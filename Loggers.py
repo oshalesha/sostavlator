@@ -12,15 +12,12 @@ def get_pos(yanked, cell):
     return None
 
 
-class FirstTimeLogger:
-    def __init__(self):
-        f = open('notes.csv', mode='x')
-        f.close()
-
-
 class NotesManager:
     def __init__(self):
-        self.__file_name = 'notes.csv'
+        self.__file_name = '__notes.csv'
+        if not path.exists(self.__file_name):
+            f = open(self.__file_name, mode='x')
+            f.close()
 
     def get_yanked(self):
         with open(self.__file_name, mode='r') as f:
@@ -39,17 +36,21 @@ class NotesManager:
                 return pos
         return None
 
-    def remove_check_mark_cell(self, name):  # удалятор
+    def remove(self, name):  # удалятор
         yanked = self.get_yanked()
         index = self.exists(name=name)
         del yanked[index]
+        if path.exists(name + '.csv'):
+            os.remove(name + '.csv')
         self.write_yanked(yanked=yanked)
         return index
 
-    def add_check_mark_cell(self, name: str):
+    def add(self, name: str):
         yanked = self.get_yanked()
         index = self.exists(name=name)
         if index is None:
+            f = open(name + '.csv', mode='x')
+            f.close()
             yanked.insert(len(yanked), [name])
             self.write_yanked(yanked=yanked)
 
@@ -61,7 +62,7 @@ class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
             f = open(self.__file_name, mode='x')
             f.close()
         notes_manager = NotesManager()
-        notes_manager.add_check_mark_cell(note_name)
+        notes_manager.add(note_name)
 
     def get_file_name(self):
         return self.__file_name
@@ -132,6 +133,13 @@ class TimeLogger:
             for i in range(1, 13):
                 f = open('./' + dir_name + '/' + str(i) + '.csv', mode='x')
                 f.close()
+            notes_manager = NotesManager()
+            notes_manager.add(dir_name)
 
     def get_dir_name(self):
         return self.__dir_name
+
+    def get_yanked(self, month: int):
+        with open(self.__dir_name + '/' + str(month) + '.csv', mode='r') as f:
+            yanked = [row for row in csv.reader(f)]
+        return yanked

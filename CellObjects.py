@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 
 
 def to_time(string: str):
@@ -57,4 +58,47 @@ class CheckMarkCell(MarkCell):
         self.__date_time = new_date_time
         return self
 
+
+class Category(Enum):
+    STUDY = 0
+    SPORT = 1
+    WORK = 2
+    HOME = 3
+
+
+class Importance(Enum):
+    NONE = 0
+    MIDDLE = 1
+    HIGH = 2
+    VERY_HIGH = 3
+
+
+class TimeCell(MarkCell):
+    def __init__(self, date_time=datetime.now(), category=Category.STUDY, importance=Importance.NONE, action="",
+                 status=False):
+        self.__date_time = date_time
+        self.__category = category
+        self.__importance = importance
+        super().__init__(action=action, status=status)
+
+    def get_date_time(self):
+        return self.__date_time
+
+    def get_category(self):
+        return self.__category
+
+    def get_importance(self):
+        return self.__importance
+
+    def set_date_time(self, new_date_time):
+        self.__date_time = new_date_time
+        return self.__date_time
+
+    def set_category(self, new_category):
+        self.__category = new_category
+        return self.__category
+
+    def set_importance(self, new_importance):
+        self.__importance = new_importance
+        return self.__importance
 
