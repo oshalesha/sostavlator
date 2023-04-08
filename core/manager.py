@@ -1,2 +1,4 @@
 class Manager:
-    pass
+    @staticmethod
+    def update():
+        pass
