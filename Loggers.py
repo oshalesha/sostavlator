@@ -1,7 +1,57 @@
 import csv
 from datetime import datetime
 from os import path
+import os
 from CellObjects import CheckMarkCell
+
+
+def get_pos(yanked, cell):
+    for pos in range(len(yanked)):
+        if CheckMarkCell(*yanked[pos]).get_action() == cell.get_action():
+            return pos
+    return None
+
+
+class FirstTimeLogger:
+    def __init__(self):
+        f = open('notes.csv', mode='x')
+        f.close()
+
+
+class NotesManager:
+    def __init__(self):
+        self.__file_name = 'notes.csv'
+
+    def get_yanked(self):
+        with open(self.__file_name, mode='r') as f:
+            yanked = [row for row in csv.reader(f)]
+        return yanked
+
+    def write_yanked(self, yanked: list):
+        with open(self.__file_name, mode='w') as f:
+            writer = csv.writer(f)
+            writer.writerows(yanked)
+
+    def exists(self, name: str):
+        yanked = self.get_yanked()
+        for pos in range(len(yanked)):
+            if yanked[pos][0] == name:
+                return pos
+        return None
+
+    def remove_check_mark_cell(self, name):  # удалятор
+        yanked = self.get_yanked()
+        index = self.exists(name=name)
+        del yanked[index]
+        self.write_yanked(yanked=yanked)
+        return index
+
+    def add_check_mark_cell(self, name: str):
+        yanked = self.get_yanked()
+        index = self.exists(name=name)
+        if index is None:
+            yanked.insert(len(yanked), [name])
+            self.write_yanked(yanked=yanked)
 
 
 class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
@@ -10,6 +60,8 @@ class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
         if not path.exists(self.__file_name):
             f = open(self.__file_name, mode='x')
             f.close()
+        notes_manager = NotesManager()
+        notes_manager.add_check_mark_cell(note_name)
 
     def get_file_name(self):
         return self.__file_name
@@ -72,9 +124,14 @@ class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
         return cells
 
 
-def get_pos(yanked, cell):
-    for pos in range(len(yanked)):
-        if CheckMarkCell(*yanked[pos]).get_action() == cell.get_action():
-            return pos
-    return None
+class TimeLogger:
+    def __init__(self, dir_name):
+        self.__dir_name = dir_name
+        if not path.exists(self.__dir_name):
+            os.mkdir(dir_name)
+            for i in range(1, 13):
+                f = open('./' + dir_name + '/' + str(i) + '.csv', mode='x')
+                f.close()
 
+    def get_dir_name(self):
+        return self.__dir_name
