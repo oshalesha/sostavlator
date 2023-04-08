@@ -1,39 +1,25 @@
-from kivy.lang import Builder
-from kivymd.app import MDApp
-from kivymd.uix.pickers import MDDatePicker
-from kivy.uix.popup import Popup
+from kivy.app import App
+from kivy.uix.gridlayout import GridLayout
+
+from frontend.my_calendar import Calendar
+from frontend.time_table import TimeTable
+from settings.settings import Settings
 
 
-class NoteDialog(Popup):
-    note_text = ""
-
-
-class MainApp(MDApp):
+class MainApp(App):
     def build(self):
-        self.theme_cls.theme_style = "Light"
-        self.theme_cls.primary_palette = "BlueGray"
-        return Builder.load_file('my.kv')
+        main_window = GridLayout()
+        main_window.cols = 2
+        main_window.add_widget(Settings())
 
-    def show_date_picker(self):
-        date_dialog = MDDatePicker()
-        date_dialog.open()
+        interface_window = GridLayout()
+        interface_window.cols = 2
+        interface_window.add_widget(TimeTable())
+        interface_window.add_widget(Calendar.window())
 
-    def show_note_dialog(self):
-        self.note_dialog = NoteDialog()
-        self.note_dialog.ids.note_text.text = ""
-        self.note_dialog.open()
-
-    def save_note(self):
-        note_text = self.note_dialog.ids.note_text.text
-        NoteDialog.note_text = note_text
-        self.note_dialog.dismiss()
+        main_window.add_widget(interface_window)
+        return main_window
 
 
-'''
-    def save_note(self):
-        note_text = self.root.ids.note_text.text
-        # Save the note to a file or database
-        self.root.ids.note_text.text = ""
-        '''
-
-MainApp().run()
+if __name__ == "__main__":
+    MainApp().run()
