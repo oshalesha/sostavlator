@@ -10,11 +10,11 @@ class MainApp(App):
     def build(self):
         main_window = GridLayout()
         main_window.cols = 2
-        main_window.add_widget(Settings())
+        #main_window.add_widget(Settings())
 
         interface_window = GridLayout()
         interface_window.cols = 2
-        interface_window.add_widget(TimeTable())
+        interface_window.add_widget(TimeTable.window())
         interface_window.add_widget(Calendar.window())
 
         main_window.add_widget(interface_window)

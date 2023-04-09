@@ -7,20 +7,23 @@ import enum
 
 
 class SimpleTaskConstructor:
-    pass
+    def window(self):
+        pass
 
 #############################################################
 
 
 class NoteTaskEditor:
-    pass
+    def window(self):
+        pass
 
 
 #############################################################
 
 
 class NoteTaskConstructor:
-    pass
+    def window(self):
+        pass
 
 #############################################################
 

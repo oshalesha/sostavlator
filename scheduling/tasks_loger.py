@@ -1,5 +1,5 @@
 from Loggers import CheckMarkLogger as NoteTaskLogger, TimeLogger as SimpleTaskLogger, NotesManager
-from planning import SimpleTask, NoteTask
+from scheduling.planning import SimpleTask, NoteTask
 
 
 # TODO: work with simple task

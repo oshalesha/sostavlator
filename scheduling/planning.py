@@ -8,4 +8,10 @@ class NoteTask(CheckMarkCell):
 
 
 class Plan:
-    pass
+    def __init__(self, simple_tasks=None, notes=None):
+        if notes is None:
+            notes = []
+        if simple_tasks is None:
+            simple_tasks = []
+        self.simple_tasks = simple_tasks
+        self.notes = notes
