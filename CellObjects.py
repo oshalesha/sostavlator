@@ -5,6 +5,10 @@ def to_time(string: str):
     return datetime.strptime(string, '%Y-%m-%d %H:%M:%S.%f')
 
 
+class TimeCell:
+    pass
+
+
 class MarkCell:
     def __init__(self, action="", status=False):
         self.__action = action

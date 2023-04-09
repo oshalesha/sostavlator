@@ -1,4 +1,7 @@
+from scheduling.planning import Plan
 
 
 class TimeTable:
-    pass
+    @staticmethod
+    def show(plan: Plan):
+        pass

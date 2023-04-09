@@ -39,7 +39,7 @@ class Calendar:
     @staticmethod
     def _set_date(new_date):
         Calendar.__current__date = new_date
-        Manager.update()
+        Manager.set_date(new_date)
 
     @staticmethod
     def window():
@@ -127,4 +127,3 @@ class Calendar:
                 Calendar._set_date(date(self.window.month['year'],
                                         self.window.month['month'],
                                         int(button.text)))
-

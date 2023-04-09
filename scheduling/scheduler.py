@@ -1,19 +1,17 @@
-import kivy
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.button import Button
+from datetime import date
 
-
-class Task:
-    pass
-
-
-class Plan:
-    pass
+from scheduling.planning import Plan, SimpleTask, NoteTask
+from scheduling.tasks_loger import TasksLoger
 
 
 class Scheduler:
-    pass
+
+    @staticmethod
+    def get_plan(day: date):
+        return Plan()
+
+    @staticmethod
+    def update(callback):
+        pass
 
 
-class Constructor:
-    pass
