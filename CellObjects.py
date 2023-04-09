@@ -31,16 +31,16 @@ class MarkCell:
 
 
 class CheckMarkCell(MarkCell):
-    def __init__(self, period=0, calls_number=0, date_time=datetime.now(), action="", status=False):
-        self.__period = period  # check the default value later
-        self.__calls_number = calls_number
-        self.__date_time = date_time
+    def __init__(self, period=0, calls_number=0, date_time=str(datetime.now()), action="", status=False):
+        self.__period = float(period)  # check the default value later
+        self.__calls_number = int(calls_number)
+        self.__date_time = to_time(date_time)
         super().__init__(action=action, status=status)
 
     def get_calls_number(self):
         return self.__calls_number
 
-    def get_period(self):
+    def get_period(self) -> float:
         return self.__period
 
     def get_date_time(self):

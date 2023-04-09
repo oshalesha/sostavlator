@@ -7,7 +7,7 @@ from CellObjects import TimeCell
 
 
 def to_check_mark(yanked):
-    return [CheckMarkCell(row) for row in yanked]
+    return [CheckMarkCell(*row) for row in yanked]
 
 
 def to_time_mark(yanked):
@@ -86,6 +86,13 @@ class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
     def get(self):
         return to_check_mark(self.get_yanked())
 
+    def get_by_name(self, name: str):
+        got = self.get()
+        for pos in range(len(got)):
+            if got[pos].get_action() == name:
+                return got[pos]
+        return None
+
     def write_yanked(self, yanked: list):
         with open(self.__file_name, mode='w') as f:
             writer = csv.writer(f)
@@ -112,18 +119,23 @@ class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
             yanked.insert(len(yanked), cell.to_list())
             self.write_yanked(yanked=yanked)
 
-    def update_check_mark_cell(self, old_cell: CheckMarkCell, new_cell: CheckMarkCell):
-        if self.exists(name=new_cell.get_action()) and self.exists(
-                name=old_cell.get_action()) and new_cell.get_action() != old_cell.get_action():
+    def rename_check_mark_cell(self, old_name: str, new_name: str):
+        if self.exists(new_name) and self.exists(old_name) and new_name != old_name:
             raise "You cannot save it as an existing name."
-        if old_cell.get_action() == new_cell.get_action() and old_cell.get_status() and new_cell.get_status() is False:
-            calls = new_cell.get_calls_number()
-            interval = (datetime.now() - new_cell.get_date_time()).total_seconds() / 3600
-            new_cell.set_period((calls * new_cell.get_period() + interval) / (calls + 1))
-            new_cell.set_date_time(datetime.now())
-            new_cell.set_calls_number(calls + 1)
-        self.remove_check_mark_cell(cell=old_cell)
-        self.add_check_mark_cell(cell=new_cell)
+        self.remove_check_mark_cell(CheckMarkCell(action=old_name))
+        self.add_check_mark_cell(CheckMarkCell(action=new_name))
+
+    def set_status(self, name: str, status=False):
+        cell = self.get_by_name(name)
+        self.remove_check_mark_cell(cell=cell)
+        if cell.get_status() and status is False:
+            calls = cell.get_calls_number()
+            interval = (datetime.now() - cell.get_date_time()).total_seconds() / 3600
+            cell.set_period((calls * cell.get_period() + interval) / (calls + 1))
+            cell.set_date_time(datetime.now())
+            cell.set_calls_number(calls + 1)
+        cell.set_status(status)
+        self.add_check_mark_cell(cell=cell)
 
     def clear(self):
         self.write_yanked(yanked=[])
