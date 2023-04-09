@@ -1,10 +1,10 @@
-from CellObjects import CheckMarkCell, TimeCell as SimpleTask
+from CellObjects import CheckMarkCell as NoteTask, TimeCell as SimpleTask
 
 
-class NoteTask(CheckMarkCell):
-    def __init__(self, note, **kwargs):
-        super().__init__(**kwargs)
-        self.note = note
+class Note:
+    def __init__(self, name, tasks):
+        self.name = name
+        self.tasks = tasks
 
 
 class Plan:
@@ -13,5 +13,6 @@ class Plan:
             notes = []
         if simple_tasks is None:
             simple_tasks = []
+
         self.simple_tasks = simple_tasks
         self.notes = notes
