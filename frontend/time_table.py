@@ -9,7 +9,7 @@ import frontend.constructors as constructors
 
 class TimeTable:
     plan = Plan()
-    tasks_counter = 12
+    tasks_counter = 9
     table: GridLayout
 
     @staticmethod
@@ -20,6 +20,7 @@ class TimeTable:
     @staticmethod
     def update_plan(callback):
         TimeTable.plan = callback.shape(TimeTable.plan)
+        TimeTable.redraw_tasks()
         mn.Manager.update(callback)
 
     @staticmethod
@@ -60,9 +61,6 @@ class TimeTable:
         constructor = constructors.SimpleTaskConstructor()
         constructor.window().open()
 
-        callback = constructor.callback()
-        TimeTable.update_plan(callback)
-
     @staticmethod
     def open_notes(button):
         popup = Popup(content=NotesWindow())
@@ -76,32 +74,32 @@ class TaskButton(GridLayout):
     def __init__(self, task: SimpleTask, **kwargs):
         super().__init__(**kwargs)
         self.task = task
+        self.cols = 2
 
         done_button = Button()
-        done_button.text("done")
-        done_button.bind(on_press="done")
+        done_button.text = "done"
+        done_button.bind(on_press=self.done)
         self.done_button = done_button
         self.add_widget(done_button)
 
         task_button = Button()
-        task_button.text(task.get_action())
+        task_button.text = task.get_action()
         task_button.bind(on_release=self.task_config)
         self.task_button = task_button
         self.add_widget(task_button)
 
-    @staticmethod
-    def done(button):
+    def done(self, button):
         button.text = "undone"
         callback = constructors.CallBack()
-        # TODO: set callback
+        new_version = self.task
+        new_version.set_status(True)
+        callback.updated_simple_tasks.append((self.task, new_version))
         TimeTable.update_plan(callback)
 
     def task_config(self, button):
         cns = constructors.SimpleTaskConstructor()
-        cns.task = self.task
+        constructors.SimpleTaskConstructor.task = self.task
         cns.window().open()
-        callback = cns.callback()
-        TimeTable.update_plan(callback)
 
 
 #########################################################################

@@ -29,6 +29,8 @@ def prev_month(month: dict):
 
 
 ################################################################################
+
+
 class Calendar:
     __current__date = date.today()
 
