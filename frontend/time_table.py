@@ -58,13 +58,19 @@ class TimeTable:
 
     @staticmethod
     def add_press(button):
-        constructor = constructors.SimpleTaskConstructor()
-        constructor.window().open()
+        TimeTable.constructor = constructors.SimpleTaskConstructor()
+        add_window = TimeTable.constructor.window()
+        add_window.bind(on_dismiss=TimeTable.add_callback)
+        add_window.open()
+
+    @staticmethod
+    def add_callback(popup):
+        TimeTable.update_plan(TimeTable.constructor.callback())
+
 
     @staticmethod
     def open_notes(button):
-        popup = Popup(content=NotesWindow())
-        popup.open()
+        NotesWindow().open()
 
 
 #########################################################################
@@ -77,7 +83,7 @@ class TaskButton(GridLayout):
         self.cols = 2
 
         done_button = Button()
-        done_button.text = "done"
+        done_button.text = "undone" if task.get_status() else "done"
         done_button.bind(on_press=self.done)
         self.done_button = done_button
         self.add_widget(done_button)
@@ -89,28 +95,31 @@ class TaskButton(GridLayout):
         self.add_widget(task_button)
 
     def done(self, button):
-        button.text = "undone"
         callback = constructors.CallBack()
         new_version = self.task
-        new_version.set_status(True)
+        new_version.set_status(not new_version.get_status())
         callback.updated_simple_tasks.append((self.task, new_version))
         TimeTable.update_plan(callback)
 
     def task_config(self, button):
-        cns = constructors.SimpleTaskConstructor()
+        self.cns = constructors.SimpleTaskConstructor()
         constructors.SimpleTaskConstructor.task = self.task
-        cns.window().open()
+        window = self.cns.window()
+        window.bind(on_dismiss=self.callback)
+        window.open()
 
+    def callback(self, instance):
+        TimeTable.update_plan(self.cns.callback())
 
 #########################################################################
 
 
-class NotesWindow(GridLayout):
+class NotesWindow(Popup):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.notes = TimeTable.plan.notes
-        self.cols = 3
-        self.rows = 2
+        self.content = GridLayout()
+        self.content.cols = 3
+        self.content.rows = 2
         self.redraw()
 
     @staticmethod
@@ -128,24 +137,32 @@ class NotesWindow(GridLayout):
         TimeTable.update_plan(cns.callback())
 
     def add_note(self, button):
-        cns = constructors.NoteTaskConstructor()
-        cns.window().open()
-        TimeTable.update_plan(cns.callback())
-        self.notes = TimeTable.plan.notes
+        self.cns = constructors.NoteTaskConstructor()
+        add_window = self.cns.window()
+        add_window.bind(on_dismiss=self.callback)
+        add_window.open()
+
+    def callback(self, popup):
+        TimeTable.update_plan(self.cns.callback())
         self.redraw()
 
     def redraw(self):
-        self.clear_widgets()
-        for note in self.notes:
-            self.add_widget(self.real_note_button(note))
+        self.content.clear_widgets()
+        notes = TimeTable.plan.notes
+        for note in notes:
+            self.content.add_widget(self.real_note_button(note))
 
-        if len(self.notes) < self.cols * self.rows:
+        if len(notes) < self.content.cols * self.content.rows:
             btn = Button()
             btn.text = "add"
             btn.bind(on_release=self.add_note)
-            self.add_widget(btn)
-        for i in range(self.cols * self.rows - 1):
-            self.add_widget(empty_space())
+            self.content.add_widget(btn)
+        for i in range(self.content.cols * self.content.rows - 2 - len(notes)):
+            self.content.add_widget(empty_space())
+        self.content.add_widget(Button(text="close", on_release=self.close))
+
+    def close(self, instance):
+        self.dismiss()
 
 
 #########################################################################

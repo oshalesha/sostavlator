@@ -80,6 +80,7 @@ class SimpleTaskConstructor(Constructor):
     _popup: Popup
     _task_name: str
     _callback: CallBack
+    _status: False
     task = None
 
     def __init__(self):
@@ -96,6 +97,7 @@ class SimpleTaskConstructor(Constructor):
         stc._time_hour.text = "00"
         stc._time_minute = TextInput()
         stc._time_minute.text = "00"
+        stc._status = False
 
     def window(self):
         stc = SimpleTaskConstructor
@@ -105,6 +107,7 @@ class SimpleTaskConstructor(Constructor):
             stc._importance = stc.task.get_importance().value
             stc._time_hour.text = str(stc.task.get_date_time().hour)
             stc._time_minute.text = str(stc.task.get_date_time().minute)
+            stc._status = stc.task.get_status()
 
         window = GridLayout()
         window.rows = 3
@@ -141,7 +144,7 @@ class SimpleTaskConstructor(Constructor):
                          hour=int(stc._time_hour.text), minute=int(stc._time_minute.text))
         new_task = SimpleTask(action=stc._task_name.text, category=stc._category,
                               importance=Importance(stc._importance),
-                              date_time=str(timer) + ".0")
+                              date_time=str(timer) + ".0", status=stc._status)
         if stc.task is None:
             stc._callback.added_simple_tasks.append(new_task)
         else:
@@ -157,6 +160,7 @@ class SimpleTaskConstructor(Constructor):
     def change_importance(button):
         stc = SimpleTaskConstructor
         if stc._importance == len(Importance) - 1:
+            stc._importance = 0
             button.text = Importance(0).name
         else:
             stc._importance += 1
@@ -166,6 +170,7 @@ class SimpleTaskConstructor(Constructor):
     def change_category(button):
         stc = SimpleTaskConstructor
         if stc._category == len(Category) - 1:
+            stc._category = 0
             button.text = Category(0).name
         else:
             stc._category += 1
@@ -226,7 +231,7 @@ class NoteTaskConstructor(Constructor):
         NoteTaskConstructor._popup.dismiss()
 
     def callback(self):
-        return CallBack()
+        return NoteTaskConstructor._callback
 
 
 #############################################################
