@@ -1,7 +1,6 @@
 import frontend.time_table as tb
 
-if __name__ == "__main__":
-    from scheduling.scheduler import Scheduler
+from scheduling.scheduler import Scheduler
 
 
 class Manager:

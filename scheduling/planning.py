@@ -1,4 +1,4 @@
-from CellObjects import CheckMarkCell as NoteTask, TimeCell as SimpleTask
+from CellObjects import CheckMarkCell as NoteTask, TimeCell as SimpleTask, Category, Importance
 
 
 class Note:
