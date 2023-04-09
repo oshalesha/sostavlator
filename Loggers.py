@@ -3,6 +3,15 @@ from datetime import datetime
 from os import path
 import os
 from CellObjects import CheckMarkCell
+from CellObjects import TimeCell
+
+
+def to_check_mark(yanked):
+    return [CheckMarkCell(row) for row in yanked]
+
+
+def to_time_mark(yanked):
+    return [TimeCell(*row) for row in yanked]
 
 
 def get_pos(yanked, cell):
@@ -58,9 +67,6 @@ class NotesManager:
 class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
     def __init__(self, note_name):
         self.__file_name = note_name + '.csv'
-        if not path.exists(self.__file_name):
-            f = open(self.__file_name, mode='x')
-            f.close()
         notes_manager = NotesManager()
         notes_manager.add(note_name)
 
@@ -76,6 +82,9 @@ class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
         with open(self.__file_name, mode='r') as f:
             yanked = [row for row in csv.reader(f)]
         return yanked
+
+    def get(self):
+        return to_check_mark(self.get_yanked())
 
     def write_yanked(self, yanked: list):
         with open(self.__file_name, mode='w') as f:
@@ -126,20 +135,69 @@ class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
 
 
 class TimeLogger:
-    def __init__(self, dir_name):
-        self.__dir_name = dir_name
+    def __init__(self):
+        self.__dir_name = "__time"
         if not path.exists(self.__dir_name):
-            os.mkdir(dir_name)
+            os.mkdir(self.__dir_name)
             for i in range(1, 13):
-                f = open('./' + dir_name + '/' + str(i) + '.csv', mode='x')
+                f = open('./' + self.__dir_name + '/' + str(i) + '.csv', mode='x')
                 f.close()
-            notes_manager = NotesManager()
-            notes_manager.add(dir_name)
 
     def get_dir_name(self):
         return self.__dir_name
 
-    def get_yanked(self, month: int):
+    def get_yanked_for_month(self, month: int):
         with open(self.__dir_name + '/' + str(month) + '.csv', mode='r') as f:
             yanked = [row for row in csv.reader(f)]
         return yanked
+
+    def get_month(self, month: int):
+        return to_time_mark(self.get_yanked_for_month(month=month))
+
+    def get_yanked_for_day(self, date=datetime.now()):  # дописать
+        month = date.month
+        with open(self.__dir_name + '/' + str(month) + '.csv', mode='r') as f:
+            yanked = []
+            for row in csv.reader(f):
+                if TimeCell(*row).get_day() == date.day:
+                    yanked.append(row)
+        return yanked
+
+    def get_day(self, date=datetime.now()):
+        return to_time_mark(self.get_yanked_for_day(date=date))
+
+    def write_yanked(self, yanked: list, month: int):
+        with open(self.__dir_name + '/' + str(month) + '.csv', mode='w') as f:
+            writer = csv.writer(f)
+            writer.writerows(yanked)
+
+    def exists(self, name: str, month: int):
+        yanked = self.get_yanked_for_month(month)
+        for task in yanked:
+            if TimeCell(*task).get_action() == name:
+                return True
+        return False
+
+    def remove_time_cell(self, cell: TimeCell):  # удалятор
+        month = cell.get_date_time().month
+        yanked = self.get_yanked_for_month(month)
+        index = get_pos(yanked, cell)
+        del yanked[index]
+        self.write_yanked(yanked=yanked, month=month)
+        return index
+
+    def add_time_cell(self, cell: TimeCell):
+        month = cell.get_date_time().month
+        yanked = self.get_yanked_for_month(month)
+        index = get_pos(yanked, cell)
+        if index is None:
+            yanked.insert(len(yanked), cell.to_list())
+            self.write_yanked(yanked=yanked, month=month)
+
+    def update_time_cell(self, old_cell: TimeCell, new_cell: TimeCell):
+        self.remove_time_cell(cell=old_cell)
+        self.add_time_cell(cell=new_cell)
+
+    def clear(self):
+        for i in range(1, 13):
+            self.write_yanked(yanked=[], month=i)

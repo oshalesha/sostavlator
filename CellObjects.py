@@ -74,15 +74,18 @@ class Importance(Enum):
 
 
 class TimeCell(MarkCell):
-    def __init__(self, date_time=datetime.now(), category=Category.STUDY, importance=Importance.NONE, action="",
+    def __init__(self, date_time=str(datetime.now()), category=Category.STUDY, importance=Importance.NONE, action="",
                  status=False):
-        self.__date_time = date_time
+        self.__date_time = to_time(date_time)
         self.__category = category
         self.__importance = importance
         super().__init__(action=action, status=status)
 
-    def get_date_time(self):
+    def get_date_time(self) -> datetime:
         return self.__date_time
+
+    def get_day(self):
+        return self.__date_time.date().day
 
     def get_category(self):
         return self.__category
@@ -90,7 +93,7 @@ class TimeCell(MarkCell):
     def get_importance(self):
         return self.__importance
 
-    def set_date_time(self, new_date_time):
+    def set_date_time(self, new_date_time: str):
         self.__date_time = new_date_time
         return self.__date_time
 
@@ -101,4 +104,3 @@ class TimeCell(MarkCell):
     def set_importance(self, new_importance):
         self.__importance = new_importance
         return self.__importance
-
