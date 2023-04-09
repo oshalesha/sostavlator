@@ -7,7 +7,7 @@ class CheckMarkHint:
     def __init__(self, name: str):
         self.__logger = CheckMarkLogger(name)
 
-    def predict(self):
+    def predict(self) -> list:
         hint = []
         yanked = self.__logger.get()
         for pos in range(len(yanked)):
