@@ -1,7 +1,8 @@
-from Loggers import *
+from Loggers import TimeLogger
+from Oracle import TimeOracle
 from CellObjects import TimeCell
 
+oracle = TimeOracle()
 logger = TimeLogger()
-logger.clear()
-logger.add(cell=TimeCell(action="мамачка"))
-print(OracleLogger().get())
+logger.add(TimeCell(action="поездка в израиль"))
+print(oracle.predict())
