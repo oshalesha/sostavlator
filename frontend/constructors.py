@@ -97,7 +97,7 @@ class SimpleTaskConstructor(Constructor):
                          hour=int(stc._time_hour.text), minute=int(stc._time_minute.text))
         new_task = SimpleTask(action=stc._task_name.text, category=stc._category,
                               importance=Importance(stc._importance),
-                              date_time=str(timer) + ".0", status=stc._status)
+                              scheduled=timer, status=stc._status)
         if stc.task is None:
             stc._callback.added_simple_tasks.append(new_task)
         else:
@@ -185,7 +185,4 @@ class NoteConstructor(Constructor):
 
     def callback(self):
         return NoteConstructor._callback
-
-
-#############################################################
 

@@ -45,32 +45,32 @@ class NotesManager:
         self.__file_name = '__notes.csv'
         self.__reader = Reader(file_name='__notes')
 
-    def __get_list(self) -> list:
+    def get_list(self) -> list:
         return self.__reader.read()
 
     def get(self) -> list:
-        got = self.__get_list()
+        got = self.get_list()
         result = list()
         for item in got:
             result.append(item[0])
         return result
 
     def __exists(self, name: str = ""):
-        got = self.__get_list()
+        got = self.get_list()
         for pos in range(len(got)):
             if got[pos] == [name]:
                 return pos
         return None
 
     def remove(self, name: str = ""):
-        got = self.__get_list()
+        got = self.get_list()
         index = self.__exists(name=name)
         del got[index]
         self.__reader.write_list(records=got)
         os.remove(name + '.csv')
 
     def add(self, name: str = ""):
-        got = self.__get_list()
+        got = self.get_list()
         if self.__exists(name=name) is None:
             got.append([name])
             self.__reader.write_list(records=got)

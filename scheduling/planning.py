@@ -32,7 +32,7 @@ class RePlanning:
         self.added_notes = list()
         # [(note, note)]
         self.updated_notes = list()
-        # [note]
+        # [str]
         self.removed_notes = list()
 
     def shape(self, plan: Plan):

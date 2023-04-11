@@ -1,6 +1,8 @@
 from Loggers import CheckMarkLogger as NoteTaskLogger, TimeLogger as SimpleTaskLogger, NotesManager
 import scheduling.planning as pl
 
+from datetime import date
+
 
 class TasksLoger:
 
@@ -10,6 +12,7 @@ class TasksLoger:
 
     @staticmethod
     def remove_note(note: str):
+        NoteTaskLogger(note).clear()
         NotesManager().remove(note)
 
     @staticmethod
@@ -17,11 +20,11 @@ class TasksLoger:
         """simple task or note with only one task"""
         if isinstance(task, pl.Note):
             loger = NoteTaskLogger(task.name)
-            loger.add_check_mark_cell(task.tasks[0])
+            loger.add(task.tasks[0])
         elif isinstance(task, pl.SimpleTask):
-            SimpleTaskLogger().add_time_cell(task)
+            SimpleTaskLogger().add(task)
         else:
-            raise TypeError("unknown task in loger add")
+            raise RuntimeError("unknown task in loger add")
 
     @staticmethod
     def update(old, new):
@@ -35,24 +38,45 @@ class TasksLoger:
             if old_task.get_status() != new_task.get_status():
                 loger.set_status(old_task.get_action(), new_task.get_status())
             elif old_task.get_action() != old_task.get_action():
-                loger.rename_check_mark_cell(old_task.get_action(), new_task.get_action())
+                loger.rename(old_task.get_action(), new_task.get_action())
+            else:
+                raise RuntimeError("update task without changes")
 
         elif isinstance(old, pl.SimpleTask):
-            SimpleTaskLogger().update_time_cell(old, new)
+            loger = SimpleTaskLogger()
+            if old.get_status() != new.get_status():
+                loger.set_status(old.get_action(), new.get_status())
+            elif old.get_action() != old.get_action():
+                loger.rename(old.get_action(), new.get_action())
+            else:
+                # TODO: category and importance changes?
+                pass
         else:
-            raise TypeError("unknown task in loger update")
+            raise RuntimeError("unknown task in loger update")
 
     @staticmethod
     def remove(task):
         """simple task or note with only one task"""
         if isinstance(task, pl.Note):
             loger = NoteTaskLogger(task.name)
-            loger.remove_check_mark_cell(task.tasks[0])
+            loger.remove(task.tasks[0])
         elif isinstance(task, pl.SimpleTask):
-            SimpleTaskLogger().remove_time_cell(task)
+            SimpleTaskLogger().remove(task)
         else:
-            raise TypeError("unknown task in loger remove")
+            raise RuntimeError("unknown task in loger remove")
 
     @staticmethod
     def pull_out_notes():
-        pass
+        notes = list()
+        for note_name in NotesManager().get_list():
+            pass
+            # TODO: pull
+            # notes.append(pl.Note(note_name, NoteTaskLogger(note_name).))
+        return notes
+
+    @staticmethod
+    def pull_out_tasks(day: date):
+        # TODO: push year
+        return SimpleTaskLogger().get_for_day(day.month, day.day)
+
+

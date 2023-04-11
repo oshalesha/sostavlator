@@ -133,7 +133,7 @@ class NotesWindow(Popup):
 
     @staticmethod
     def open_note(button):
-        cns = constructors.NoteTaskEditor()
+        cns = constructors.NoteTaskConstructor()
         cns.window().open()
         TimeTable.update_plan(cns.callback())
 
