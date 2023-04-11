@@ -4,13 +4,12 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 
-from scheduling.planning import NoteTask, SimpleTask, Plan, Note, Category, Importance
+from scheduling.planning import SimpleTask, Category, Importance, RePlanning
 import frontend.my_calendar as clndr
 import frontend.time_table as tb
 
-from enum import Enum
 from abc import ABC, abstractmethod
-from datetime import time, datetime
+from datetime import datetime
 
 
 class Constructor(ABC):
@@ -26,52 +25,6 @@ class Constructor(ABC):
 #############################################################
 
 
-class CallBack:
-    def __init__(self):
-        # [SimpleTask]
-        self.added_simple_tasks = list()
-        # [(SimpleTask, SimpleTask)]
-        self.updated_simple_tasks = list()
-        # [SimpleTask]
-        self.removed_simple_tasks = list()
-        # [str]
-        self.added_notes = list()
-        # [(note, note)]
-        self.updated_notes = list()
-        # [note]
-        self.removed_notes = list()
-
-    def shape(self, plan: Plan):
-        for task in self.added_simple_tasks:
-            plan.simple_tasks.append(task)
-
-        for pair in self.updated_simple_tasks:
-            for index, value in enumerate(plan.simple_tasks):
-                if pair[0] == value:
-                    plan.simple_tasks[index] = pair[1]
-
-        for task in self.removed_simple_tasks:
-            if task in plan.simple_tasks:
-                plan.simple_tasks.remove(task)
-
-        for name in self.added_notes:
-            plan.notes.append(Note(name=name, tasks=list()))
-
-        for pair in self.updated_notes:
-            for index, value in enumerate(plan.notes):
-                if pair[0].name == value.name:
-                    plan.simple_tasks[index] = pair[1]
-
-        for note in self.removed_notes:
-            for index, value in enumerate(plan.notes):
-                if note.name == plan.notes:
-                    plan.notes.remove(value)
-        return plan
-
-
-#############################################################
-
-
 class SimpleTaskConstructor(Constructor):
     _time_minute: TextInput
     _time_hour: TextInput
@@ -79,7 +32,7 @@ class SimpleTaskConstructor(Constructor):
     _importance: Importance
     _popup: Popup
     _task_name: str
-    _callback: CallBack
+    _callback: RePlanning
     _status: False
     task = None
 
@@ -88,7 +41,7 @@ class SimpleTaskConstructor(Constructor):
 
         stc.task = None
         stc._popup = Popup()
-        stc._callback = CallBack()
+        stc._callback = RePlanning()
 
         stc._task_name = TextInput()
         stc._category = 0
@@ -132,7 +85,7 @@ class SimpleTaskConstructor(Constructor):
         return stc._popup
 
     def callback(self):
-        return CallBack()
+        return RePlanning()
 
     @staticmethod
     def save(button):
@@ -179,33 +132,33 @@ class SimpleTaskConstructor(Constructor):
 #############################################################
 
 
-class NoteTaskEditor(Constructor):
+class NoteTaskConstructor(Constructor):
     # note is set by user class
 
     def window(self):
         return Popup()
 
     def callback(self):
-        return CallBack()
+        return RePlanning()
 
 
 #############################################################
 
 
-class NoteTaskConstructor(Constructor):
+class NoteConstructor(Constructor):
     _popup: Popup
     _note_name: str
-    _callback: CallBack
+    _callback: RePlanning
 
     def __init__(self):
-        ntc = NoteTaskConstructor
+        ntc = NoteConstructor
         ntc._popup = Popup()
         ntc._note_name = TextInput()
-        ntc._callback = CallBack()
+        ntc._callback = RePlanning()
 
     def window(self):
         # can't save it as object fields due to kivy popup behavior
-        ntc = NoteTaskConstructor
+        ntc = NoteConstructor
 
         window = GridLayout()
         window.rows = 4
@@ -220,18 +173,18 @@ class NoteTaskConstructor(Constructor):
 
     @staticmethod
     def save_name(button):
-        ntc = NoteTaskConstructor
+        ntc = NoteConstructor
         if ntc._note_name.text == "":
             return
         ntc._callback.added_notes.append(ntc._note_name.text)
-        NoteTaskConstructor._popup.dismiss()
+        NoteConstructor._popup.dismiss()
 
     @staticmethod
     def cancel(button):
-        NoteTaskConstructor._popup.dismiss()
+        NoteConstructor._popup.dismiss()
 
     def callback(self):
-        return NoteTaskConstructor._callback
+        return NoteConstructor._callback
 
 
 #############################################################

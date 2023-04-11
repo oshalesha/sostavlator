@@ -11,4 +11,4 @@ class Manager:
 
     @staticmethod
     def update(callback):
-        pass
+        Scheduler.update(callback)

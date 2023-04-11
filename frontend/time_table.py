@@ -3,6 +3,7 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 
 import core.manager as mn
+import scheduling.planning
 from scheduling.planning import Plan, SimpleTask
 import frontend.constructors as constructors
 
@@ -95,7 +96,7 @@ class TaskButton(GridLayout):
         self.add_widget(task_button)
 
     def done(self, button):
-        callback = constructors.CallBack()
+        callback = scheduling.planning.RePlanning()
         new_version = self.task
         new_version.set_status(not new_version.get_status())
         callback.updated_simple_tasks.append((self.task, new_version))
@@ -137,7 +138,7 @@ class NotesWindow(Popup):
         TimeTable.update_plan(cns.callback())
 
     def add_note(self, button):
-        self.cns = constructors.NoteTaskConstructor()
+        self.cns = constructors.NoteConstructor()
         add_window = self.cns.window()
         add_window.bind(on_dismiss=self.callback)
         add_window.open()
