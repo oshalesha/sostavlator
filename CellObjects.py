@@ -3,11 +3,12 @@ from enum import Enum
 
 
 def to_time(string: str):
-    return datetime.strptime(string, '%Y-%m-%d %H:%M:%S.%f')
+    return datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
 
 
 class MarkCell:
-    def __init__(self, period: float = 0, calls_number: int = 0, action: str = "", edited: datetime = datetime.now(),
+    def __init__(self, period: float = 0, calls_number: int = 0, action: str = "", edited:
+                 datetime = datetime.now().replace(microsecond=0),
                  status: bool = False):
         self.__period = period
         self.__calls_number = calls_number
@@ -67,7 +68,8 @@ class MarkCell:
 
 
 class CheckMarkCell(MarkCell):
-    def __init__(self, period: float = 0, calls_number: int = 0, action: str = "", edited: datetime = datetime.now(),
+    def __init__(self, period: float = 0, calls_number: int = 0, action: str = "",
+                 edited: datetime = datetime.now().replace(microsecond=0),
                  status: bool = False, params_list: list = None):
         if params_list is None:
             super().__init__(period=period, calls_number=calls_number, action=action, edited=edited, status=status)
@@ -92,9 +94,9 @@ class Importance(Enum):
 
 
 class TimeCell(MarkCell):
-    def __init__(self, scheduled: datetime = datetime.now(), category: Category = Category.STUDY,
+    def __init__(self, scheduled: datetime = datetime.now().replace(microsecond=0), category: Category = Category.STUDY,
                  importance: Importance = Importance.NONE, period: float = 0, calls_number: int = 0, action: str = "",
-                 edited: datetime = datetime.now(),
+                 edited: datetime = datetime.now().replace(microsecond=0),
                  status: bool = False, params_list: list = None):
         if params_list is None:
             self.__scheduled = scheduled

@@ -58,7 +58,7 @@ class SimpleTaskConstructor(Constructor):
             stc._task_name.text = stc.task.get_action()
             stc._category = stc.task.get_category()
             stc._importance = stc.task.get_importance().value
-            stc._time_hour.text = str(stc.task.get_date_time().hour)
+            stc._time_hour.text = str(stc.task.get_day().hour)
             stc._time_minute.text = str(stc.task.get_date_time().minute)
             stc._status = stc.task.get_status()
 
@@ -94,10 +94,9 @@ class SimpleTaskConstructor(Constructor):
             return
         today = clndr.Calendar.current_date()
         timer = datetime(today.year, today.month, today.day,
-                         hour=int(stc._time_hour.text), minute=int(stc._time_minute.text))
-        new_task = SimpleTask(action=stc._task_name.text, category=stc._category,
-                              importance=Importance(stc._importance),
-                              scheduled=timer, status=stc._status)
+                         int(stc._time_hour.text), int(stc._time_minute.text))
+        new_task = SimpleTask(action=stc._task_name.text, category=stc._category, scheduled=timer,
+                              importance=Importance(stc._importance), status=stc._status)
         if stc.task is None:
             stc._callback.added_simple_tasks.append(new_task)
         else:

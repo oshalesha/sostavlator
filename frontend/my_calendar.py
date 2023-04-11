@@ -45,6 +45,7 @@ class Calendar:
 
     @staticmethod
     def window():
+        Manager.set_date(date.today())  # draw current date at starting
         return Calendar._Window()
 
     # contact with user
