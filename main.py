@@ -6,6 +6,7 @@ import core.manager as mn
 
 class MainApp(App):
     def build(self):
+        self.title = 'sostavlator'
         return mn.Manager()
 
 

@@ -52,10 +52,12 @@ class Calendar(GridLayout):
         # buttons
         left = Button()
         left.text = "left"
+        left.size_hint = (0.3, 1)
         left.bind(on_press=self.left_move)
 
         right = Button()
         right.text = "right"
+        right.size_hint = (0.3, 1)
         right.bind(on_press=self.right_move)
 
         # label
@@ -68,6 +70,7 @@ class Calendar(GridLayout):
         top.add_widget(left)
         top.add_widget(self.label)
         top.add_widget(right)
+        top.size_hint = (1, 0.3)
         self.add_widget(top)
 
         self.days_table = self.create_days_table()
@@ -94,7 +97,7 @@ class Calendar(GridLayout):
         self.days_table = self.create_days_table()
         self.add_widget(self.days_table)
 
-    ############################################################################
+############################################################################
 
     class DaysTable(GridLayout):
         def __init__(self, window, **kwargs):

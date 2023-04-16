@@ -4,49 +4,39 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 
+import scheduling.planning as pl
+
 
 class NoteTaskConstructor:
     pass
 
 
-class NoteConstructor:
-    pass
-    '''_popup: Popup
-    _note_name: str
-    _callback: RePlanning
+##########################################################
 
-    def __init__(self):
-        ntc = NoteConstructor
-        ntc._popup = Popup()
-        ntc._note_name = TextInput()
-        ntc._callback = RePlanning()
 
-    def window(self):
-        # can't save it as object fields due to kivy popup behavior
-        ntc = NoteConstructor
+class NoteConstructor(Popup):
+    def __init__(self, callback, **kwargs):
+        super().__init__(**kwargs)
+        self.__callback = callback
+        self.__note__name = TextInput()
 
-        window = GridLayout()
-        window.rows = 4
+        self.content = GridLayout()
+        self.content.rows = 2
 
-        window.add_widget(Label(text="enter the name"))
-        window.add_widget(ntc._note_name)
-        window.add_widget(Button(text="save", on_release=ntc.save_name))
-        window.add_widget(Button(text="cancel", on_release=ntc.cancel))
+        self.content.add_widget(self.__note__name)
+        manage = GridLayout()
+        manage.cols = 2
+        manage.add_widget(Button(text="save", on_release=self.save))
+        manage.add_widget(Button(text="cancel", on_release=self.cancel))
+        self.content.add_widget(manage)
 
-        ntc._popup.content = window
-        return ntc._popup
-
-    @staticmethod
-    def save_name(button):
-        ntc = NoteConstructor
-        if ntc._note_name.text == "":
+    def save(self, button):
+        if self.__note__name.text == "":
             return
-        ntc._callback.added_notes.append(ntc._note_name.text)
-        NoteConstructor._popup.dismiss()
+        callback = pl.RePlanning()
+        callback.added_notes.append(self.__note__name.text)
+        self.__callback(callback, redraw=True)
+        self.dismiss()
 
-    @staticmethod
-    def cancel(button):
-        NoteConstructor._popup.dismiss()
-
-    def callback(self):
-        return NoteConstructor._callback'''
+    def cancel(self, button):
+        self.dismiss()

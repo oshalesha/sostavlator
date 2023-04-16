@@ -11,7 +11,7 @@ class TimeTable(GridLayout):
     def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
         self.__callback = callback
-        # TODO: just a magic number?
+        # TODO: just a magic number ? :)
         self.__tasks__max = 9
         # tasks + add_button + open_notes_button
         self.rows = self.__tasks__max + 2
@@ -30,11 +30,11 @@ class TimeTable(GridLayout):
         self.__callback(callback)
 
     def __redraw(self):
-        # TODO: tasks more than spaces?..
+        # TODO: what if tasks would be more than spaces?..
 
         self.clear_widgets()
         # add button
-        add_btn = btn.AddTaskButton(callback=self.update_plan)
+        add_btn = btn.AddSimpleTaskButton(callback=self.update_plan)
         add_btn.text = "add"
         self.add_widget(add_btn)
 
@@ -54,7 +54,7 @@ class TimeTable(GridLayout):
         self.add_widget(note_btn)
 
     def open_notes(self, button):
-        NotesWindow(self.__plan.notes, callback=self.update_plan).open()
+        NotesWindow(self.__plan.notes.copy(), callback=self.update_plan).open()
 
 
 #########################################################################
@@ -79,33 +79,28 @@ class NotesWindow(Popup):
 
         # add_button
         if len(self.__notes) < self.content.cols * self.content.rows:
-            btn = Button()
-            btn.text = "add"
-            btn.bind(on_release=self.add_note)
-            self.content.add_widget(btn)
+            add_btn = btn.AddNoteButton(self.callback)
+            add_btn.text = "add"
+            self.content.add_widget(add_btn)
 
         # empty_spaces
         for i in range(self.content.cols * self.content.rows - 2 - len(self.__notes)):
             self.content.add_widget(empty_space())
         self.content.add_widget(Button(text="close", on_release=self.close))
 
-        def real_note_button(self, note):
-            btn = Button()
-            btn.text = note.name
-            btn.note = note
-            # TODO: bind with open note
-            return btn
+    def real_note_button(self, note):
+        btn = Button()
+        btn.text = note.name
+        btn.note = note
+        # TODO: bind with open note
+        return btn
 
-        def add_note(self, button):
-            # TODO
-            pass
+    def callback(self, callback, redraw=True):
+        self.__notes = callback.shape_notes(self.__notes)
+        # no need to redraw simple tasks
+        self.__callback(callback, redraw=False)
+        if redraw:
+            self.__redraw()
 
-        def callback(self, instance, callback, redraw=True):
-            self.__notes = callback.shape(self.__notes)
-            # no need to redraw simple tasks
-            self.__callback(callback, redraw=False)
-            if redraw:
-                self.__redraw()
-
-        def close(self, instance):
-            self.dismiss()
+    def close(self, instance):
+        self.dismiss()

@@ -49,16 +49,20 @@ class RePlanning:
             if task in plan.simple_tasks:
                 plan.simple_tasks.remove(task)
 
+        plan.notes = self.shape_notes(plan.notes)
+        return plan
+
+    def shape_notes(self, notes):
         for name in self.added_notes:
-            plan.notes.append(Note(name=name, tasks=list()))
+            notes.append(Note(name=name, tasks=list()))
 
         for pair in self.updated_notes:
-            for index, value in enumerate(plan.notes):
+            for index, value in enumerate(notes):
                 if pair[0].name == value.name:
-                    plan.simple_tasks[index] = pair[1]
+                    notes[index] = pair[1]
 
         for note in self.removed_notes:
-            for index, value in enumerate(plan.notes):
-                if note.name == plan.notes:
-                    plan.notes.remove(value)
-        return plan
+            for index, value in enumerate(notes):
+                if note.name == value.name:
+                    notes.remove(value)
+        return notes

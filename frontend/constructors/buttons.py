@@ -7,7 +7,7 @@ import frontend.constructors.note_constructors as note_cns
 from scheduling import planning as pl
 
 
-class AddTaskButton(Button):
+class AddSimpleTaskButton(Button):
     def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
         self._callback = callback
@@ -55,3 +55,28 @@ class SimpleTaskButton(GridLayout):
 
     def callback(self, callback, redraw=True):
         self._callback(callback, redraw)
+
+#####################################################################
+
+
+class AddNoteButton(Button):
+    def __init__(self, callback, **kwargs):
+        super().__init__(**kwargs)
+        self.__callback = callback
+
+    def on_press(self):
+        note_cns.NoteConstructor(callback=self.__callback).open()
+
+
+#####################################################################
+
+
+class AddNoteTaskButton:
+    pass
+
+
+#####################################################################
+
+
+class NotetaskButton:
+    pass
