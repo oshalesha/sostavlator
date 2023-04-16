@@ -23,7 +23,7 @@ class TimeTable(GridLayout):
         self.__plan = plan
         self.__redraw()
 
-    def update_plan(self, instance, callback, redraw=True):
+    def update_plan(self, callback, redraw=True):
         self.__plan = callback.shape(self.__plan)
         if redraw:
             self.__redraw()
@@ -39,12 +39,11 @@ class TimeTable(GridLayout):
         self.add_widget(add_btn)
 
         # real tasks
-        for task in self.plan.simple_tasks:
-            self.add_widget(btn.SimpleTaskButton(self.task, callback=self.update_plan))
+        for task in self.__plan.simple_tasks:
+            self.add_widget(btn.SimpleTaskButton(task, callback=self.update_plan))
 
         # empty spaces
-        # TODO: move empty_space to another file
-        for i in range(self.tasks_counter - len(self.__plan.simple_tasks)):
+        for i in range(self.__tasks__max - len(self.__plan.simple_tasks)):
             self.add_widget(empty_space())
 
         # Notes button
@@ -87,27 +86,26 @@ class NotesWindow(Popup):
 
         # empty_spaces
         for i in range(self.content.cols * self.content.rows - 2 - len(self.__notes)):
-            # TODO: empty_spaces -> another file
             self.content.add_widget(empty_space())
         self.content.add_widget(Button(text="close", on_release=self.close))
 
-    def real_note_button(self, note):
-        btn = Button()
-        btn.text = note.name
-        btn.note = note
-        # TODO: bind with open note
-        return btn
+        def real_note_button(self, note):
+            btn = Button()
+            btn.text = note.name
+            btn.note = note
+            # TODO: bind with open note
+            return btn
 
-    def add_note(self, button):
-        # TODO
-        pass
+        def add_note(self, button):
+            # TODO
+            pass
 
-    def callback(self, instance, callback, redraw=True):
-        self.__notes = callback.shape(self.__notes)
-        # no need to redraw simple tasks
-        self.__callback(callback, redraw=False)
-        if redraw:
-            self.__redraw()
+        def callback(self, instance, callback, redraw=True):
+            self.__notes = callback.shape(self.__notes)
+            # no need to redraw simple tasks
+            self.__callback(callback, redraw=False)
+            if redraw:
+                self.__redraw()
 
-    def close(self, instance):
-        self.dismiss()
+        def close(self, instance):
+            self.dismiss()

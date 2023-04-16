@@ -1,7 +1,9 @@
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 
-from frontend.constructors.simple_constructor import SimpleTaskConstructor
+import frontend.constructors.simple_constructors as simple_cns
+import frontend.constructors.note_constructors as note_cns
+
 from scheduling import planning as pl
 
 
@@ -9,7 +11,14 @@ class AddTaskButton(Button):
     def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
         self._callback = callback
-        # TODO: on_push
+
+    def on_press(self):
+        simple_cns.SimpleTaskConstructor(self._callback).open()
+
+    # TODO: check is time valid
+
+
+#####################################################################
 
 
 class SimpleTaskButton(GridLayout):
@@ -38,9 +47,11 @@ class SimpleTaskButton(GridLayout):
         new_version.set_status(not new_version.get_status())
         callback.updated_simple_tasks.append((self.__task, new_version))
         self._callback(callback, redraw=False)
+        self.__task.set_status(new_version.get_status())
+        button.text = "undone" if self.__task.get_status() else "done"
 
     def task_config(self, button):
-        SimpleTaskConstructor(callback=self.callback).open()
+        simple_cns.SimpleTaskRedactor(callback=self.callback, task=self.__task).open()
 
-    def callback(self, instance, callback, redraw=True):
+    def callback(self, callback, redraw=True):
         self._callback(callback, redraw)

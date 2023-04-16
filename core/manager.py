@@ -2,24 +2,25 @@ from kivy.uix.gridlayout import GridLayout
 
 import frontend.main.time_table as tb
 import frontend.main.my_calendar as cld
-
 import scheduling.scheduler as scheduler
+import core.today as today
 
 
 class Manager(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.__scheduler = scheduler.Scheduler()
         self.__table = tb.TimeTable(callback=self.change_in_plan)
         self.__calendar = cld.Calendar(set_date_callback=self.set_date)
-        self.__scheduler = scheduler.Scheduler()
 
         self.cols = 2
         self.add_widget(self.__table)
         self.add_widget(self.__calendar)
 
-    def set_date(self, calendar_instance, day):
+    def set_date(self, day):
         plan = self.__scheduler.get_plan(day)
+        today.set_date(day)
         self.__table.show(plan)
 
-    def change_in_plan(self, tb_instance, callback):
+    def change_in_plan(self, callback):
         self.__scheduler.update(callback)

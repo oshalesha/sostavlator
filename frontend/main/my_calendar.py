@@ -7,6 +7,7 @@ from datetime import date
 
 from frontend.design.support import empty_space
 
+
 ################################################################################
 
 
@@ -86,14 +87,16 @@ class Calendar(GridLayout):
         self.label.text = month_name[self.month['month']] + ' ' + str(self.month['year'])
 
     def create_days_table(self):
-        return Calendar.__DaysLabel(self)
+        return self.DaysTable(self)
 
     def redraw_days_table(self):
         self.remove_widget(self.days_table)
         self.days_table = self.create_days_table()
         self.add_widget(self.days_table)
 
-    class __DaysLabel(GridLayout):
+    ############################################################################
+
+    class DaysTable(GridLayout):
         def __init__(self, window, **kwargs):
             super().__init__(**kwargs)
             self.window = window
@@ -113,8 +116,7 @@ class Calendar(GridLayout):
             button.bind(on_press=self.day_reset)
             return button
 
-        # TODO: find instance of calendar???
         def day_reset(self, button):
-            Calendar._set_date(date(self.window.month['year'],
-                                    self.window.month['month'],
-                                    int(button.text)))
+            self.window._set_date(date(self.window.month['year'],
+                                       self.window.month['month'],
+                                       int(button.text)))

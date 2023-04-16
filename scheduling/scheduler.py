@@ -5,14 +5,11 @@ import scheduling.tasks_loger as tl
 
 
 class Scheduler:
-
-    @staticmethod
-    def get_plan(day: date):
+    def get_plan(self, day: date):
         return pl.Plan(tl.TasksLogger.pull_out_tasks(day),
                        tl.TasksLogger.pull_out_notes())
 
-    @staticmethod
-    def update(re_plan: pl.RePlanning):
+    def update(self, re_plan: pl.RePlanning):
         logger = tl.TasksLogger
         for task in re_plan.added_simple_tasks:
             logger.add(task)

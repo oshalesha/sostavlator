@@ -10,7 +10,8 @@ class NoteTaskConstructor:
 
 
 class NoteConstructor:
-    _popup: Popup
+    pass
+    '''_popup: Popup
     _note_name: str
     _callback: RePlanning
 
@@ -48,4 +49,4 @@ class NoteConstructor:
         NoteConstructor._popup.dismiss()
 
     def callback(self):
-        return NoteConstructor._callback
+        return NoteConstructor._callback'''

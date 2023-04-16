@@ -39,15 +39,15 @@ class TasksLogger:
                 loger.set_status(old_task.get_action(), new_task.get_status())
             elif old_task.get_action() != old_task.get_action():
                 loger.rename(old_task.get_action(), new_task.get_action())
-            else:
-                raise RuntimeError("update task without changes")
 
         elif isinstance(old, pl.SimpleTask):
             loger = SimpleTaskLogger()
             if old.get_status() != new.get_status():
-                loger.set_status(old.get_action(), new.get_status())
-            elif old.get_action() != old.get_action():
-                loger.rename(old.get_action(), new.get_action())
+                loger.set_status(old.get_action(), new.get_status(),
+                                 old.get_scheduled().month, old.get_scheduled().day)
+            elif old.get_action() != new.get_action():
+                loger.rename(old.get_action(), new.get_action(),
+                             old.get_scheduled().month, old.get_scheduled().day)
             else:
                 # TODO: category and importance changes?
                 pass
