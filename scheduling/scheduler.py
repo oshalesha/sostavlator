@@ -8,12 +8,12 @@ class Scheduler:
 
     @staticmethod
     def get_plan(day: date):
-        return pl.Plan(tl.TasksLoger.pull_out_tasks(day),
-                       tl.TasksLoger.pull_out_notes())
+        return pl.Plan(tl.TasksLogger.pull_out_tasks(day),
+                       tl.TasksLogger.pull_out_notes())
 
     @staticmethod
     def update(re_plan: pl.RePlanning):
-        logger = tl.TasksLoger
+        logger = tl.TasksLogger
         for task in re_plan.added_simple_tasks:
             logger.add(task)
         for pair in re_plan.updated_simple_tasks:
@@ -27,5 +27,3 @@ class Scheduler:
             logger.update(pair[0], pair[1])
         for note in re_plan.removed_notes:
             logger.remove_note(note)
-
-

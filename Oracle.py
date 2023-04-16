@@ -1,8 +1,10 @@
 from Loggers import CheckMarkLogger
 from Loggers import OracleLogger
 from Loggers import PersonalLogger
+
 from datetime import timedelta
 from datetime import datetime
+
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder

@@ -1,31 +1,16 @@
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
-from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 
-from scheduling.planning import SimpleTask, Category, Importance, RePlanning
-import frontend.my_calendar as clndr
-import frontend.time_table as tb
+import frontend.main.my_calendar as clndr
+import frontend.main.time_table as tb
 
-from abc import ABC, abstractmethod
 from datetime import datetime
 
 
-class Constructor(ABC):
-    @abstractmethod
-    def window(self):
-        raise NotImplementedError()
 
-    @abstractmethod
-    def callback(self):
-        raise NotImplementedError()
-
-
-#############################################################
-
-
-class SimpleTaskConstructor(Constructor):
+class SimpleTaskConstructor:
     _time_minute: TextInput
     _time_hour: TextInput
     _category: Category
@@ -58,8 +43,9 @@ class SimpleTaskConstructor(Constructor):
             stc._task_name.text = stc.task.get_action()
             stc._category = stc.task.get_category()
             stc._importance = stc.task.get_importance().value
-            stc._time_hour.text = str(stc.task.get_day().hour)
-            stc._time_minute.text = str(stc.task.get_date_time().minute)
+            # TODO: there no get time at the moment
+            stc._time_hour.text = str(datetime.now().hour)
+            stc._time_minute.text = str(datetime.now().minute)
             stc._status = stc.task.get_status()
 
         window = GridLayout()
@@ -127,61 +113,3 @@ class SimpleTaskConstructor(Constructor):
         else:
             stc._category += 1
             button.text = Category(stc._category).name
-
-#############################################################
-
-
-class NoteTaskConstructor(Constructor):
-    # note is set by user class
-
-    def window(self):
-        return Popup()
-
-    def callback(self):
-        return RePlanning()
-
-
-#############################################################
-
-
-class NoteConstructor(Constructor):
-    _popup: Popup
-    _note_name: str
-    _callback: RePlanning
-
-    def __init__(self):
-        ntc = NoteConstructor
-        ntc._popup = Popup()
-        ntc._note_name = TextInput()
-        ntc._callback = RePlanning()
-
-    def window(self):
-        # can't save it as object fields due to kivy popup behavior
-        ntc = NoteConstructor
-
-        window = GridLayout()
-        window.rows = 4
-
-        window.add_widget(Label(text="enter the name"))
-        window.add_widget(ntc._note_name)
-        window.add_widget(Button(text="save", on_release=ntc.save_name))
-        window.add_widget(Button(text="cancel", on_release=ntc.cancel))
-
-        ntc._popup.content = window
-        return ntc._popup
-
-    @staticmethod
-    def save_name(button):
-        ntc = NoteConstructor
-        if ntc._note_name.text == "":
-            return
-        ntc._callback.added_notes.append(ntc._note_name.text)
-        NoteConstructor._popup.dismiss()
-
-    @staticmethod
-    def cancel(button):
-        NoteConstructor._popup.dismiss()
-
-    def callback(self):
-        return NoteConstructor._callback
-

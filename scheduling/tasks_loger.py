@@ -4,7 +4,7 @@ import scheduling.planning as pl
 from datetime import date
 
 
-class TasksLoger:
+class TasksLogger:
 
     @staticmethod
     def add_note(note: str):
