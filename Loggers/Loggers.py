@@ -1,10 +1,15 @@
 import csv
 import os
+import shutil
 from os import path
 from datetime import datetime
-from CellObjects import CheckMarkCell
-from CellObjects import TimeCell
+from CellObjects.CellObjects import CheckMarkCell
+from CellObjects.CellObjects import TimeCell
 import pickle
+
+
+def note_path(note_name: str = ""):
+    return '__data/__check_marks/' + note_name + '.csv'
 
 
 def to_check_mark(yanked):
@@ -18,8 +23,9 @@ def to_time_mark(yanked):
 class Reader:
     def __init__(self, file_name: str = ""):
         self.__file_name = file_name
+        os.makedirs(os.path.dirname(self.__file_name), exist_ok=True)
         if not path.exists(self.__file_name):
-            with open(self.__file_name, mode='x'):
+            with open(self.__file_name, 'x'):
                 pass
 
     def read(self) -> list:
@@ -42,8 +48,8 @@ class Reader:
 
 class NotesManager:
     def __init__(self):
-        self.__file_name = '__notes.csv'
-        self.__reader = Reader(file_name='__notes')
+        self.__file_name = '__data/__notes.csv'
+        self.__reader = Reader(file_name='__data/__notes.csv')
 
     def get_list(self) -> list:
         return self.__reader.read()
@@ -67,25 +73,24 @@ class NotesManager:
         index = self.__exists(name=name)
         del got[index]
         self.__reader.write_list(records=got)
-        os.remove(name + '.csv')
+        os.remove(note_path(note_name=name))
 
     def add(self, name: str = ""):
         got = self.get_list()
         if self.__exists(name=name) is None:
             got.append([name])
             self.__reader.write_list(records=got)
-        if not path.exists(name + '.csv'):
-            with open(name + '.csv', 'x'):
-                pass
+            reader = Reader(file_name=note_path(name))
 
     def clear(self):
-        self.__reader.write_list([])
+        self.__reader.write_list([])   # what the heck
+        shutil.rmtree('__data/__check_marks')
 
 
 class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
     def __init__(self, note_name: str = ""):
-        self.__file_name = note_name + '.csv'
-        self.__reader = Reader(file_name=note_name)
+        self.__file_name = '__data/__check_marks/' + note_name + '.csv'
+        self.__reader = Reader(file_name=self.__file_name)
         notes_manager = NotesManager()
         notes_manager.add(note_name)
 
@@ -148,53 +153,55 @@ class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
 
 class TimeLogger:
     def __init__(self):
-        self.__dir_name = "__time"
-        if not path.exists(self.__dir_name):
-            os.mkdir(self.__dir_name)
-            for month in range(1, 13):
-                os.mkdir(self.__dir_name + '/' + str(month))
+        self.__dir_name = "__data/__time"
+        os.makedirs(self.__dir_name, exist_ok=True)
 
     def get_dir_name(self) -> str:
         return self.__dir_name
 
-    def __get_path_md(self, month: int = datetime.now().month, day: int = 1) -> str:
-        return self.get_dir_name() + '/' + str(month) + '/' + str(day) + '.csv'
+    def __get_path_ymd(self, year: int = datetime.now().year, month: int = datetime.now().month, day: int = 1) -> str:
+        return self.get_dir_name() + '/' + str(year) + '/' + str(month) + '/' + str(day) + '.csv'
 
     def __get_path_cell(self, cell: TimeCell) -> str:
-        return self.__get_path_md(cell.get_scheduled().month, cell.get_scheduled().day)
+        return self.__get_path_ymd(cell.get_scheduled().year, cell.get_scheduled().month, cell.get_scheduled().day)
 
-    def get_for_month(self, month: int = datetime.now().month) -> list:
+    def get_for_month(self, year: int = datetime.now().year, month: int = datetime.now().month) -> list:
         result = []
-        name = self.get_dir_name() + '/' + str(month) + '/'
+        name = self.get_dir_name() + '/' + str(year) + '/' + str(month) + '/'
         for file in os.listdir(name):
             reader = Reader(name + file)
             result += to_time_mark(reader.read())
         return result
 
-    def __get_as_lists(self, month: int = datetime.now().month, day: int = datetime.now().day) -> list:
-        reader = Reader(self.__get_path_md(month, day))
+    def __get_as_lists(self, year: int = datetime.now().year, month: int = datetime.now().month,
+                       day: int = datetime.now().day) -> list:
+        reader = Reader(self.__get_path_ymd(year, month, day))
         return reader.read()
 
-    def __get_tuple(self, month: int = datetime.now().month, day: int = datetime.now().day, name: str = "") -> tuple:
-        got = self.__get_as_lists(month, day)
+    def __get_tuple(self, year: int = datetime.now().year, month: int = datetime.now().month,
+                    day: int = datetime.now().day, name: str = "") -> tuple:
+        got = self.__get_as_lists(year, month, day)
         for pos in range(len(got)):
             if TimeCell(params_list=got[pos]).get_action() == name:
                 return pos, got
         return None, None
 
-    def __get(self, month: int = datetime.now().month, day: int = datetime.now().day, name: str = "") -> TimeCell:
-        pos, got = self.__get_tuple(month, day, name)
+    def __get(self, year: int = datetime.now().year, month: int = datetime.now().month, day: int = datetime.now().day,
+              name: str = "") -> TimeCell:
+        pos, got = self.__get_tuple(year, month, day, name)
         return TimeCell(params_list=got[pos])
 
-    def get_for_day(self, month: int = datetime.now().month, day: int = datetime.now().day) -> list:
-        return to_time_mark(self.__get_as_lists(month, day))
+    def get_for_day(self, year: int = datetime.now().year, month: int = datetime.now().month,
+                    day: int = datetime.now().day) -> list:
+        return to_time_mark(self.__get_as_lists(year, month, day))
 
-    def exists(self, month: int = datetime.now().month, day: int = datetime.now().day, name: str = "") -> bool:
-        pos, got = self.__get_tuple(month, day, name)
+    def exists(self, year: int = datetime.now().year, month: int = datetime.now().month, day: int = datetime.now().day,
+               name: str = "") -> bool:
+        pos, got = self.__get_tuple(year, month, day, name)
         return pos is not None
 
     def remove(self, cell: TimeCell):
-        index, got = self.__get_tuple(*cell.get_md_act())
+        index, got = self.__get_tuple(*cell.get_ymd_act())
         removed = got[index]
         del got[index]
         reader = Reader(self.__get_path_cell(cell))
@@ -202,25 +209,27 @@ class TimeLogger:
         return removed
 
     def add(self, cell: TimeCell):
-        got = self.__get_as_lists(*cell.get_md())
-        if not self.exists(*cell.get_md_act()):
+        got = self.__get_as_lists(*cell.get_ymd())
+        if not self.exists(*cell.get_ymd_act()):
             OracleLogger().update(cell.get_action())
             got.append(cell.to_list())
             reader = Reader(self.__get_path_cell(cell))
             reader.write_list(got)
 
-    def rename(self, old_name: str = "", new_name: str = "", month: int = datetime.now().month,
+    def rename(self, old_name: str = "", new_name: str = "", year: int = datetime.now().year,
+               month: int = datetime.now().month,
                day: int = datetime.now().day):
-        if self.exists(month, day, new_name) and self.exists(month, day, old_name) and new_name != old_name:
+        if self.exists(year, month, day, new_name) and self.exists(year, month, day, old_name) and new_name != old_name:
             raise "You cannot save it as an existing name."
-        got = self.__get(month, day, old_name)
+        got = self.__get(year, month, day, old_name)
         self.remove(cell=got)
         got.set_action(new_name)
         self.add(cell=got)
 
-    def set_status(self, name: str = "", month: int = datetime.now().month, day: int = datetime.now().day,
+    def set_status(self, name: str = "", year: int = datetime.now().year, month: int = datetime.now().month,
+                   day: int = datetime.now().day,
                    status=False):
-        cell = self.__get(month, day, name)
+        cell = self.__get(year, month, day, name)
         self.remove(cell=cell)
         cell.set_status(status)
         self.add(cell=cell)
@@ -234,8 +243,9 @@ class TimeLogger:
 
 class OracleLogger:  # don't use it
     def __init__(self):
-        self.__file_name = "__oracle.pickle"
-        if not path.exists(self.__file_name):
+        self.__file_name = "__data/__oracle.pickle"
+        os.makedirs(os.path.dirname(self.__file_name), exist_ok=True)
+        if not os.path.exists(self.__file_name):
             with open(self.__file_name, mode='wb'):
                 self.__dump(loaded=dict())
 
@@ -267,8 +277,9 @@ class PersonalLogger:  # use it only once
                  picked_reading: bool = False, picked_art: bool = True,
                  picked_studying: bool = True, picked_activities: bool = False, picked_sports: bool = True,
                  picked_work: bool = True):
-        self.__file_name = "__personal.pickle"
-        if not path.exists(self.__file_name):
+        self.__file_name = "__data/__personal.pickle"
+        os.makedirs(os.path.dirname(self.__file_name), exist_ok=True)
+        if not os.path.exists(self.__file_name):
             with open(self.__file_name, mode='wb'):
                 self.__dump(loaded=dict({'sex': sex, 'age': age, 'free_time': free_time, 'picked_movies': picked_movies,
                                          'picked_reading': picked_reading, 'picked_art': picked_art,
@@ -290,4 +301,3 @@ class PersonalLogger:  # use it only once
 
     def clear(self):
         self.__dump(loaded=dict())
-

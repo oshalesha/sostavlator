@@ -1,4 +1,4 @@
-from Loggers import CheckMarkLogger as NoteTaskLogger, TimeLogger as SimpleTaskLogger, NotesManager
+from Loggers.Loggers import CheckMarkLogger as NoteTaskLogger, TimeLogger as SimpleTaskLogger, NotesManager
 import scheduling.planning as pl
 
 from datetime import date

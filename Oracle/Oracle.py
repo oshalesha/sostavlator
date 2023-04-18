@@ -1,6 +1,6 @@
-from Loggers import CheckMarkLogger
-from Loggers import OracleLogger
-from Loggers import PersonalLogger
+from Loggers.Loggers import CheckMarkLogger
+from Loggers.Loggers import OracleLogger
+from Loggers.Loggers import PersonalLogger
 
 from datetime import timedelta
 from datetime import datetime
@@ -26,7 +26,7 @@ class CheckMarkOracle:
 
 class Ganglion:
     def __init__(self):
-        self.__data = pd.read_csv('data.csv')
+        self.__data = pd.read_csv('Ganglion/data.csv')
         self.__category_features = ['sex', 'picked_movies',
                                     'picked_reading', 'picked_art', 'picked_studying', 'picked_activities',
                                     'picked_sports', 'picked_work']

@@ -7,8 +7,8 @@ def to_time(string: str):
 
 
 class MarkCell:
-    def __init__(self, period: float = 0, calls_number: int = 0, action: str = "", edited:
-                 datetime = datetime.now().replace(microsecond=0),
+    def __init__(self, period: float = 0, calls_number: int = 0, action: str = "",
+                 edited: datetime = datetime.now().replace(microsecond=0),
                  status: bool = False):
         self.__period = period
         self.__calls_number = calls_number
@@ -136,10 +136,11 @@ class TimeCell(MarkCell):
         return self
 
     def get_path(self) -> str:
-        return str(self.get_scheduled().month) + '/' + str(self.get_scheduled().day) + '.csv'
+        return str(self.get_scheduled().year) + '/' + str(self.get_scheduled().month) + '/' + str(
+            self.get_scheduled().day) + '.csv'
 
-    def get_md_act(self) -> tuple:
-        return self.get_scheduled().month, self.get_scheduled().day, self.get_action()
+    def get_ymd_act(self) -> tuple:
+        return self.get_scheduled().year, self.get_scheduled().month, self.get_scheduled().day, self.get_action()
 
-    def get_md(self) -> tuple:
-        return self.get_scheduled().month, self.get_scheduled().day
+    def get_ymd(self) -> tuple:
+        return self.get_scheduled().year, self.get_scheduled().month, self.get_scheduled().day
