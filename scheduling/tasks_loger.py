@@ -76,7 +76,6 @@ class TasksLogger:
 
     @staticmethod
     def pull_out_tasks(day: date):
-        # TODO: push year
-        return SimpleTaskLogger().get_for_day(day.month, day.day)
+        return SimpleTaskLogger().get_for_day(day.year, day.month, day.day)
 
 
