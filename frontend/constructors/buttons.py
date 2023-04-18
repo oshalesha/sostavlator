@@ -1,9 +1,8 @@
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 
-import frontend.constructors.simple_constructors as simple_cns
 import frontend.constructors.note_constructors as note_cns
-
+import frontend.constructors.simple_constructors as simple_cns
 from scheduling import planning as pl
 
 
@@ -55,6 +54,7 @@ class SimpleTaskButton(GridLayout):
 
     def callback(self, callback, redraw=True):
         self._callback(callback, redraw)
+
 
 #####################################################################
 

@@ -1,9 +1,9 @@
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-
 from calendar import monthrange, month_name
 from datetime import date
+
+from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.label import Label
 
 from frontend.design.support import empty_space
 
@@ -97,7 +97,7 @@ class Calendar(GridLayout):
         self.days_table = self.create_days_table()
         self.add_widget(self.days_table)
 
-############################################################################
+    ############################################################################
 
     class DaysTable(GridLayout):
         def __init__(self, window, **kwargs):

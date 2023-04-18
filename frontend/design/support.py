@@ -1,6 +1,4 @@
 from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
-from kivy.graphics import Color, Rectangle
 
 
 def empty_space(color=None):

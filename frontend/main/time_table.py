@@ -1,5 +1,5 @@
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 
 import frontend.constructors.buttons as btn
