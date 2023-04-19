@@ -1,14 +1,14 @@
-from Loggers.Loggers import CheckMarkLogger
-from Loggers.Loggers import OracleLogger
-from Loggers.Loggers import PersonalLogger
-
-from datetime import timedelta
 from datetime import datetime
+from datetime import timedelta
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import OneHotEncoder
+
+from Loggers.Loggers import CheckMarkLogger
+from Loggers.Loggers import OracleLogger
+from Loggers.Loggers import PersonalLogger
 
 
 class CheckMarkOracle:
@@ -64,5 +64,6 @@ class TimeOracle:
         if len(got) < 5:
             predicted = self.__ganglion.predict(self.__personal_logger.get())
             predicted_list = [k for k, v in
-                              sorted(predicted.items(), key=lambda item: item[1], reverse=True)[:min(len(predicted), 5)]]
+                              sorted(predicted.items(), key=lambda item: item[1], reverse=True)[
+                              :min(len(predicted), 5)]]
             return (got + predicted_list)[:min(len(got + predicted_list), 5)]

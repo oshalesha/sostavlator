@@ -1,0 +1,6 @@
+Kivy~=2.1.0
+numpy~=1.21.5
+pandas~=1.5.3
+sklearn~=0.0.post1
+scikit-learn~=1.2.2
+В файле ~/.kivy/config.ini нужно закомментировать строку %(name)s = probesysfs.

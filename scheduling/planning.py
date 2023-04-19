@@ -1,4 +1,7 @@
-from CellObjects.CellObjects import CheckMarkCell as NoteTask, TimeCell as SimpleTask, Category, Importance
+from CellObjects.CellObjects import CheckMarkCell as NoteTask
+from CellObjects.CellObjects import TimeCell as SimpleTask
+from CellObjects.CellObjects import Category
+from CellObjects.CellObjects import Importance
 
 
 class Note:
@@ -16,6 +19,7 @@ class Plan:
 
         self.simple_tasks = simple_tasks
         self.notes = notes
+
 
 ###################################################################################
 

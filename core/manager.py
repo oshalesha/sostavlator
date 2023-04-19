@@ -1,9 +1,9 @@
 from kivy.uix.gridlayout import GridLayout
 
-import frontend.main.time_table as tb
-import frontend.main.my_calendar as cld
-import scheduling.scheduler as scheduler
 import core.today as today
+import frontend.main.my_calendar as cld
+import frontend.main.time_table as tb
+import scheduling.scheduler as scheduler
 
 
 class Manager(GridLayout):

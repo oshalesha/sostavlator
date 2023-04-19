@@ -1,11 +1,12 @@
 import csv
 import os
+import pickle
 import shutil
-from os import path
 from datetime import datetime
+from os import path
+
 from CellObjects.CellObjects import CheckMarkCell
 from CellObjects.CellObjects import TimeCell
-import pickle
 
 
 def note_path(note_name: str = ""):
@@ -80,10 +81,10 @@ class NotesManager:
         if self.__exists(name=name) is None:
             got.append([name])
             self.__reader.write_list(records=got)
-            reader = Reader(file_name=note_path(name))
+            Reader(file_name=note_path(name))
 
     def clear(self):
-        self.__reader.write_list([])   # what the heck
+        self.__reader.write_list([])  # what the heck
         shutil.rmtree('__data/__check_marks')
 
 

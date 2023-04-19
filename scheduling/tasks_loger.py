@@ -1,7 +1,7 @@
-from Loggers.Loggers import CheckMarkLogger as NoteTaskLogger, TimeLogger as SimpleTaskLogger, NotesManager
-import scheduling.planning as pl
-
 from datetime import date
+
+import scheduling.planning as pl
+from Loggers.Loggers import CheckMarkLogger as NoteTaskLogger, TimeLogger as SimpleTaskLogger, NotesManager
 
 
 class TasksLogger:
@@ -77,5 +77,3 @@ class TasksLogger:
     @staticmethod
     def pull_out_tasks(day: date):
         return SimpleTaskLogger().get_for_day(day.year, day.month, day.day)
-
-
