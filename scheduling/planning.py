@@ -35,7 +35,6 @@ class RePlanning:
         # [str]
         self.removed_notes = list()
 
-    # TODO: shape for only notes
     def shape(self, plan: Plan):
         for task in self.added_simple_tasks:
             plan.simple_tasks.append(task)

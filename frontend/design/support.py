@@ -1,6 +1,6 @@
 from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
-from kivy.graphics import Color, Rectangle
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 
 
 def empty_space(color=None):
@@ -10,3 +10,12 @@ def empty_space(color=None):
     btn = Button()
     btn.background_color = color
     return btn
+
+
+def error_window(error: str):
+    window = Popup()
+    window.size_hint = (0.5, 0.5)
+    window.title = ""
+    window.content = Label()
+    window.content.text = error
+    window.open()

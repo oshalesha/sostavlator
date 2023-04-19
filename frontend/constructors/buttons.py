@@ -15,8 +15,6 @@ class AddSimpleTaskButton(Button):
     def on_press(self):
         simple_cns.SimpleTaskConstructor(self._callback).open()
 
-    # TODO: check is time valid
-
 
 #####################################################################
 
