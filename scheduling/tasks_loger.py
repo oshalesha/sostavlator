@@ -49,7 +49,7 @@ class TasksLogger:
                 loger.rename(old.get_action(), new.get_action(),
                              old.get_scheduled().month, old.get_scheduled().day)
             else:
-                # TODO: category and importance changes?
+                # TODO: category and importance and time changes?
                 pass
         else:
             raise RuntimeError("unknown task in loger update")

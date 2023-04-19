@@ -46,18 +46,18 @@ class SimpleTaskCntWindow(Popup):
         # create main part
         self._task_name = TextInput()
         self._task_name.hint_text = "name your task"
-        self._task_name.font_size = 58
+        self._task_name.font_size = 42
 
         self._category = 0
         self._importance = 0
 
         self._time_minute = TextInput()
         self._time_minute.hint_text = "minutes"
-        self._time_minute.font_size = 58
+        self._time_minute.font_size = 42
 
         self._time_hours = TextInput()
         self._time_hours.hint_text = "hours"
-        self._time_hours.font_size = 58
+        self._time_hours.font_size = 42
 
         # push everything in content
         self.content.add_widget(self._task_name)
@@ -131,8 +131,10 @@ class SimpleTaskConstructor(SimpleTaskCntWindow):
     def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
         self.__callback = callback
-        self.size_hint = (0.6, 0.9)
-        self.pos_hint = {'x': 0.4, 'y': 0.05}
+
+        self.content.rows += 1
+        manage = GridLayout()
+        manage.cols = 2
         # add manage menu
         self.content.rows += 1
         manage = GridLayout()
@@ -141,7 +143,16 @@ class SimpleTaskConstructor(SimpleTaskCntWindow):
         manage.add_widget(Button(text='save', on_release=self.on_save))
         manage.add_widget(Button(text='cancel', on_release=self.cancel))
         self.content.add_widget(manage)
-        # TODO: window with hints
+
+        # add hints window
+        simple_content = self.content
+        self.content = GridLayout(cols=2)
+        self.content.add_widget(SimpleHintsWindow(self))
+        self.content.add_widget(simple_content)
+        simple_content.size_hint = (1.8, 1)
+
+        self.size_hint = (0.8, 1)
+        self.pos_hint = {'x': 0.1, 'y': 0}
 
     def on_save(self, instance):
         callback = pl.RePlanning()
@@ -152,6 +163,31 @@ class SimpleTaskConstructor(SimpleTaskCntWindow):
         callback.added_simple_tasks.append(self.create_task())
         self.__callback(callback, redraw=True)
         self.dismiss()
+
+
+##########################################################################
+
+
+class SimpleHintsWindow(GridLayout):
+    def __init__(self, current_cns: SimpleTaskConstructor, **kwargs):
+        super().__init__(**kwargs)
+        self.__cns = current_cns
+
+        self.add_widget(Label(text="Maybe that's what\n you wanted to do"))
+
+        hints = orcl.TimeOracle().predict()
+        self.rows = len(hints) + 1
+        for hint in hints:
+            self.add_widget(self.hint_button(hint))
+
+    def hint_button(self, name: str):
+        btn = Button()
+        btn.text = name
+
+        def press(instance):
+            self.__cns._task_name.text = btn.text
+        btn.bind(on_press=press)
+        return btn
 
 
 ##########################################################################
