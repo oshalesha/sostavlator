@@ -6,6 +6,7 @@ from kivy.uix.image import Image
 import frontend.constructors.note_constructors as note_cns
 import frontend.constructors.simple_constructors as simple_cns
 import frontend.design.colors as colors
+import frontend.design.support as support
 from scheduling import planning as pl
 
 
@@ -13,8 +14,7 @@ class AddSimpleTaskButton(ButtonBehavior, Image):
     def __init__(self, callback, *args, **kwargs):
         super().__init__(**kwargs)
         self._callback = callback
-        self.source = 'frontend/design/pictures/plus.jpg'
-
+        self.source = support.plus_image()
 
     def on_press(self):
         simple_cns.SimpleTaskConstructor(self._callback).open()
@@ -31,8 +31,9 @@ class SimpleTaskButton(GridLayout):
 
         self.cols = 2
 
-        done_button = Button()
-        done_button.text = "undone" if task.get_status() else "done"
+        done_button = support.ButtonImage()
+        done_button.source = support.task_status_image(task)
+        done_button.size_hint = (0.25, 1)
         done_button.bind(on_press=self.done)
         self.done_button = done_button
         self.add_widget(done_button)
@@ -40,7 +41,6 @@ class SimpleTaskButton(GridLayout):
         task_button = Button()
         task_button.text = task.get_action()
 
-        task_button.background_color = colors.importance_color(task.get_importance())
         task_button.bind(on_release=self.task_config)
         self.task_button = task_button
         self.add_widget(task_button)
@@ -52,7 +52,7 @@ class SimpleTaskButton(GridLayout):
         callback.updated_simple_tasks.append((self.__task, new_version))
         self._callback(callback, redraw=False)
         self.__task.set_status(new_version.get_status())
-        button.text = "undone" if self.__task.get_status() else "done"
+        self.done_button.source = support.task_status_image(self.__task)
 
     def task_config(self, button):
         simple_cns.SimpleTaskRedactor(callback=self.callback, task=self.__task).open()
