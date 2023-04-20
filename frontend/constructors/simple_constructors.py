@@ -81,7 +81,7 @@ class SimpleTaskCntWindow(Popup):
             sup.error_window("you have to name the task somehow :)")
             return None
         elif not self.valid_time():
-            sup.error_window("it seems that you entered the wrong time")
+            sup.error_window("it seems that you entered the not correct time")
             return None
 
         today = td.today()

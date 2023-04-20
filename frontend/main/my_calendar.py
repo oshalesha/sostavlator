@@ -7,7 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 
-from frontend.design.support import empty_space
+import frontend.design.support as support
 
 
 ################################################################################
@@ -114,17 +114,29 @@ class Calendar(GridLayout, Image):
             month_info = monthrange(window.month['year'], window.month['month'])
 
             for i in range(month_info[0]):
-                self.add_widget(empty_space())
+                self.add_widget(support.empty_space())
             for i in range(month_info[1]):
-                self.add_widget(self.day_button(i + 1))
+                day_btn = self.day_button(i + 1)
+                if window.current_date().day == i + 1 and \
+                        window.month['year'] == window.current_date().year and \
+                        window.month['month'] == window.current_date().month:
+                    self.current_date_button = day_btn
+                    day_btn.color = (0, 0, 1, 1)
+                self.add_widget(day_btn)
 
         def day_button(self, day):
-            button = Button()
+            button = support.ButtonText()
+            button.color = (1, 0.35, 0, 1)
+            button.font_size = 28
+
             button.text = str(day)
             button.bind(on_press=self.day_reset)
             return button
 
         def day_reset(self, button):
+            self.current_date_button.color = (1, 0.35, 0, 1)
+            self.current_date_button = button
+            button.color = (0, 0, 1, 1)
             self.window._set_date(date(self.window.month['year'],
                                        self.window.month['month'],
                                        int(button.text)))

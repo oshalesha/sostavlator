@@ -45,6 +45,20 @@ def task_status_image(task: pl.SimpleTask):
     return images + file
 
 
+def task_category_color(task: pl.SimpleTask):
+    cat = task.get_category().value
+    if cat == 0:
+        return 1, 0, 0, 1
+    elif cat == 1:
+        return 0, 1, 0, 1
+    elif cat == 2:
+        return 0, 0, 1, 1
+    elif cat == 3:
+        return 1, 1, 0, 1
+    elif cat == 4:
+        return 0, 1, 1, 1
+
+
 def plus_image():
     return images + 'plus.jpg'
 
@@ -52,3 +66,6 @@ def plus_image():
 class ButtonImage(ButtonBehavior, Image):
     pass
 
+
+class ButtonText(ButtonBehavior, Label):
+    pass

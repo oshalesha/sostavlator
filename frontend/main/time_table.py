@@ -5,14 +5,13 @@ from kivy.uix.image import Image
 
 import frontend.constructors.buttons as btn
 import scheduling.planning as pl
-from frontend.design.support import empty_space
+import frontend.design.support as support
 
 
 class TimeTable(GridLayout, Image):
     def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
         self.__callback = callback
-        # TODO: just a magic number ? :)
         self.__tasks__max = 9
         # tasks + add_button + open_notes_button
         self.rows = self.__tasks__max + 2
@@ -31,12 +30,12 @@ class TimeTable(GridLayout, Image):
         self.__callback(callback)
 
     def __redraw(self):
-        # TODO: what if tasks would be more than spaces?..
-
         self.clear_widgets()
         # add button
         add_btn = btn.AddSimpleTaskButton(callback=self.update_plan)
         add_btn.size_hint = (1, 2.3)
+        if len(self.__plan.simple_tasks) == self.__tasks__max:
+            add_btn.on_press = (lambda : support.error_window("Sorry, you reach limit for tasks"))
         self.add_widget(add_btn)
 
         # real tasks
@@ -45,7 +44,7 @@ class TimeTable(GridLayout, Image):
 
         # empty spaces
         for i in range(self.__tasks__max - len(self.__plan.simple_tasks)):
-            self.add_widget(empty_space())
+            self.add_widget(support.empty_space())
 
         # Notes button
         note_btn = Button()
@@ -86,7 +85,7 @@ class NotesWindow(Popup):
 
         # empty_spaces
         for i in range(self.content.cols * self.content.rows - 2 - len(self.__notes)):
-            self.content.add_widget(empty_space())
+            self.content.add_widget(support.empty_space())
         self.content.add_widget(Button(text="close", on_release=self.close))
 
     def real_note_button(self, note):
