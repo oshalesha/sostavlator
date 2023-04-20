@@ -3,7 +3,6 @@ from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
-from kivy.uix.gridlayout import GridLayout
 
 
 import scheduling.planning as pl
@@ -56,6 +55,3 @@ class ButtonImage(ButtonBehavior, Image):
 class ButtonText(ButtonBehavior, Label):
     pass
 
-
-class ImageGridLayout(GridLayout, Image):
-    pass

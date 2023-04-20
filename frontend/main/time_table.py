@@ -48,10 +48,7 @@ class TimeTable(GridLayout, Image):
             self.add_widget(support.empty_space())
 
         # Notes button
-        note_btn = support.ButtonText()
-        note_btn.text = "open notes"
-        note_btn.color = [0, 0, 0, 1]
-        note_btn.font_size = 28
+        note_btn = support.ButtonText(text="open notes", color=[0, 0, 0, 1], font_size=46, size_hint=(1, 1.4))
         note_btn.bind(on_press=self.open_notes)
 
         self.add_widget(note_btn)

@@ -49,7 +49,7 @@ class SimpleTaskCntWindow(Popup):
         self.content.rows = 3
 
         # create main part
-        self._task_name = TextInput()
+        self._task_name = TextInput(multiline=False)
         self._task_name.hint_text = "name your task"
         self._task_name.font_size = 42
 
@@ -68,11 +68,11 @@ class SimpleTaskCntWindow(Popup):
         self._category_btn.on_release = self.change_category
         self.update_category()
 
-        self._time_minute = TextInput()
+        self._time_minute = TextInput(multiline=False)
         self._time_minute.hint_text = "minutes"
         self._time_minute.font_size = 42
 
-        self._time_hours = TextInput()
+        self._time_hours = TextInput(multiline=False)
         self._time_hours.hint_text = "hours"
         self._time_hours.font_size = 42
 
@@ -92,7 +92,6 @@ class SimpleTaskCntWindow(Popup):
         self.content.add_widget(time)
 
     def create_task(self):
-        # TODO: check if task name is new
         if self._task_name.text == "":
             support.error_window("you have to name the task somehow :)")
             return None
@@ -158,8 +157,8 @@ class SimpleTaskConstructor(SimpleTaskCntWindow):
         manage = GridLayout()
         manage.cols = 2
 
-        manage.add_widget(Button(text='save', on_release=self.on_save, font_size=42, color=(0, 1, 0, 1)))
-        manage.add_widget(Button(text='cancel', on_release=self.cancel, font_size=42))
+        manage.add_widget(support.ButtonText(text='save', on_release=self.on_save, font_size=42, color=(0, 1, 0, 1)))
+        manage.add_widget(support.ButtonText(text='cancel', on_release=self.cancel, font_size=42))
         self.content.add_widget(manage)
 
         # add hints window
@@ -173,6 +172,7 @@ class SimpleTaskConstructor(SimpleTaskCntWindow):
         self.pos_hint = {'x': 0.1, 'y': 0}
 
     def on_save(self, instance):
+        # TODO: check if task name is new
         callback = pl.RePlanning()
         task = self.create_task()
         if task is None:
@@ -233,9 +233,9 @@ class SimpleTaskRedactor(SimpleTaskCntWindow):
         manage = GridLayout()
         manage.cols = 3
 
-        manage.add_widget(Button(text='save', on_release=self.on_save, font_size=42, color=(0, 1, 0, 1)))
-        manage.add_widget(Button(text='cancel', on_release=self.cancel, font_size=42))
-        manage.add_widget(Button(text='delete', on_release=self.on_delete, font_size=42, color=(1, 0, 0, 1)))
+        manage.add_widget(support.ButtonText(text='save', on_release=self.on_save, font_size=42, color=(0, 1, 0, 1)))
+        manage.add_widget(support.ButtonText(text='cancel', on_release=self.cancel, font_size=42))
+        manage.add_widget(support.ButtonText(text='delete', on_release=self.on_delete, font_size=42, color=(1, 0, 0, 1)))
         self.content.add_widget(manage)
 
     def on_save(self, instance):
