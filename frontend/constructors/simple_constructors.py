@@ -186,6 +186,7 @@ class SimpleHintsWindow(GridLayout):
 
         def press(instance):
             self.__cns._task_name.text = btn.text
+
         btn.bind(on_press=press)
         return btn
 

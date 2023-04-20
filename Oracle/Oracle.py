@@ -67,3 +67,4 @@ class TimeOracle:
                               sorted(predicted.items(), key=lambda item: item[1], reverse=True)[
                               :min(len(predicted), 5)]]
             return (got + predicted_list)[:min(len(got + predicted_list), 5)]
+        return got
