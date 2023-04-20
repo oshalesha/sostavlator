@@ -1,15 +1,20 @@
 from kivy.uix.button import Button
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import Image
 
 import frontend.constructors.note_constructors as note_cns
 import frontend.constructors.simple_constructors as simple_cns
+import frontend.design.colors as colors
 from scheduling import planning as pl
 
 
-class AddSimpleTaskButton(Button):
-    def __init__(self, callback, **kwargs):
+class AddSimpleTaskButton(ButtonBehavior, Image):
+    def __init__(self, callback, *args, **kwargs):
         super().__init__(**kwargs)
         self._callback = callback
+        self.source = 'frontend/design/pictures/plus.jpg'
+
 
     def on_press(self):
         simple_cns.SimpleTaskConstructor(self._callback).open()
@@ -34,6 +39,8 @@ class SimpleTaskButton(GridLayout):
 
         task_button = Button()
         task_button.text = task.get_action()
+
+        task_button.background_color = colors.importance_color(task.get_importance())
         task_button.bind(on_release=self.task_config)
         self.task_button = task_button
         self.add_widget(task_button)

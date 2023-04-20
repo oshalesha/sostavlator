@@ -1,13 +1,14 @@
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
+from kivy.uix.image import Image
 
 import frontend.constructors.buttons as btn
 import scheduling.planning as pl
 from frontend.design.support import empty_space
 
 
-class TimeTable(GridLayout):
+class TimeTable(GridLayout, Image):
     def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
         self.__callback = callback
@@ -35,7 +36,7 @@ class TimeTable(GridLayout):
         self.clear_widgets()
         # add button
         add_btn = btn.AddSimpleTaskButton(callback=self.update_plan)
-        add_btn.text = "add"
+        add_btn.size_hint = (1, 2.3)
         self.add_widget(add_btn)
 
         # real tasks

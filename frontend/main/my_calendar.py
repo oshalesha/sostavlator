@@ -2,8 +2,10 @@ from calendar import monthrange, month_name
 from datetime import date
 
 from kivy.uix.button import Button
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
+from kivy.uix.image import Image
 
 from frontend.design.support import empty_space
 
@@ -32,7 +34,7 @@ def prev_month(month: dict):
 ################################################################################
 
 
-class Calendar(GridLayout):
+class Calendar(GridLayout, Image):
 
     def current_date(self):
         return self.__current__date
@@ -50,18 +52,21 @@ class Calendar(GridLayout):
         self.rows = 2
 
         # buttons
-        left = Button()
-        left.text = "left"
+        class MoveButton(ButtonBehavior, Image):
+            pass
+
+        left = MoveButton()
+        left.source = 'frontend/design/pictures/left.png'
         left.size_hint = (0.3, 1)
         left.bind(on_press=self.left_move)
 
-        right = Button()
-        right.text = "right"
+        right = MoveButton()
+        right.source = 'frontend/design/pictures/right.png'
         right.size_hint = (0.3, 1)
         right.bind(on_press=self.right_move)
 
         # label
-        self.label = Label()
+        self.label = Label(color=(1, 0.35, 0, 1), font_size=24)
         self.update_label()
 
         # buttons line
