@@ -6,6 +6,7 @@ from kivy.uix.label import Label
 
 import frontend.constructors.note_constructors as note_cns
 import frontend.constructors.simple_constructors as simple_cns
+import frontend.design.colors as colors
 import frontend.design.support as support
 from scheduling import planning as pl
 
@@ -42,7 +43,7 @@ class SimpleTaskButton(GridLayout):
         # task button
         task_button = support.ButtonText()
         task_button.text = task.get_action()
-        task_button.color = support.task_category_color(self.__task)
+        task_button.color = colors.task_category_color(self.__task.get_category().value)
         task_button.font_size = 28
         task_button.bind(on_release=self.task_config)
         self.task_button = task_button
@@ -50,8 +51,8 @@ class SimpleTaskButton(GridLayout):
 
         # time label
         time = Label()
-        time.text = (str(task.get_scheduled().hour) + ':' +
-                     str(task.get_scheduled().minute))
+        minute = str(task.get_scheduled().minute)
+        time.text = (str(task.get_scheduled().hour) + ':' + (minute if len(minute) == 2 else '0' + minute))
         time.size_hint = (0.3, 1)
         time.color = [0, 0, 0, 1]
         time.font_size = 24

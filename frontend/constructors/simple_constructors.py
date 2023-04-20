@@ -6,18 +6,23 @@ from kivy.uix.label import Label
 
 import scheduling.planning as pl
 import core.today as td
-import frontend.design.support as sup
+import frontend.design.support as support
+import frontend.design.colors as colors
 import Oracle.Oracle as orcl
 
 from datetime import datetime
 
 
 def importance_name(importance):
-    return pl.Importance(importance).name
+    name = str(pl.Importance(importance).name)
+    name = name.replace('_', ' ')
+    return name
 
 
 def category_name(category):
-    return pl.Category(category).name
+    name = pl.Category(category).name
+    name = name.replace('_', ' ')
+    return name
 
 
 def importance_index(importance):
@@ -39,8 +44,8 @@ def category_index(category):
 class SimpleTaskCntWindow(Popup):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.content = GridLayout()
         self.title = ""
+        self.content = GridLayout()
         self.content.rows = 3
 
         # create main part
@@ -50,6 +55,18 @@ class SimpleTaskCntWindow(Popup):
 
         self._category = 0
         self._importance = 0
+
+        self._importance_btn = support.ButtonText()
+        self._importance_btn.text = importance_name(self._importance)
+        self._importance_btn.font_size = 40
+        self._importance_btn.on_release = self.change_importance
+        self.update_importance()
+
+        self._category_btn = support.ButtonText()
+        self._category_btn.text = category_name(self._category)
+        self._category_btn.font_size = 40
+        self._category_btn.on_release = self.change_category
+        self.update_category()
 
         self._time_minute = TextInput()
         self._time_minute.hint_text = "minutes"
@@ -61,15 +78,13 @@ class SimpleTaskCntWindow(Popup):
 
         # push everything in content
         self.content.add_widget(self._task_name)
-
+        # category and importance
         configs = GridLayout()
         configs.cols = 2
-        self._importance_btn = Button(text=importance_name(self._importance), on_release=self.change_importance)
-        self._category_btn = Button(text=category_name(self._category), on_release=self.change_category)
         configs.add_widget(self._category_btn)
         configs.add_widget(self._importance_btn)
         self.content.add_widget(configs)
-
+        # hours and minutes
         time = GridLayout()
         time.cols = 2
         time.add_widget(self._time_hours)
@@ -77,11 +92,12 @@ class SimpleTaskCntWindow(Popup):
         self.content.add_widget(time)
 
     def create_task(self):
+        # TODO: check if task name is new
         if self._task_name.text == "":
-            sup.error_window("you have to name the task somehow :)")
+            support.error_window("you have to name the task somehow :)")
             return None
         elif not self.valid_time():
-            sup.error_window("it seems that you entered the not correct time")
+            support.error_window("it seems that you entered the not correct time")
             return None
 
         today = td.today()
@@ -100,7 +116,7 @@ class SimpleTaskCntWindow(Popup):
             return False
         return True
 
-    def change_importance(self, button):
+    def change_importance(self):
         if self._importance == len(pl.Importance) - 1:
             self._importance = 0
         else:
@@ -109,8 +125,9 @@ class SimpleTaskCntWindow(Popup):
 
     def update_importance(self):
         self._importance_btn.text = importance_name(self._importance)
+        self._importance_btn.color = colors.task_importance_color(self._importance)
 
-    def change_category(self, button):
+    def change_category(self):
         if self._category == len(pl.Category) - 1:
             self._category = 0
         else:
@@ -119,6 +136,7 @@ class SimpleTaskCntWindow(Popup):
 
     def update_category(self):
         self._category_btn.text = category_name(self._category)
+        self._category_btn.color = colors.task_category_color(self._category)
 
     def cancel(self, instance):
         self.dismiss()
@@ -140,8 +158,8 @@ class SimpleTaskConstructor(SimpleTaskCntWindow):
         manage = GridLayout()
         manage.cols = 2
 
-        manage.add_widget(Button(text='save', on_release=self.on_save))
-        manage.add_widget(Button(text='cancel', on_release=self.cancel))
+        manage.add_widget(Button(text='save', on_release=self.on_save, font_size=42, color=(0, 1, 0, 1)))
+        manage.add_widget(Button(text='cancel', on_release=self.cancel, font_size=42))
         self.content.add_widget(manage)
 
         # add hints window
@@ -173,7 +191,7 @@ class SimpleHintsWindow(GridLayout):
         super().__init__(**kwargs)
         self.__cns = current_cns
 
-        self.add_widget(Label(text="Maybe that's what\n you wanted to do"))
+        self.add_widget(Label(text="Maybe that's what\n you wanted to do", font_size=24))
 
         hints = orcl.TimeOracle().predict()
         self.rows = len(hints) + 1
@@ -181,8 +199,7 @@ class SimpleHintsWindow(GridLayout):
             self.add_widget(self.hint_button(hint))
 
     def hint_button(self, name: str):
-        btn = Button()
-        btn.text = name
+        btn = Button(text=name, font_size=24)
 
         def press(instance):
             self.__cns._task_name.text = btn.text
@@ -216,9 +233,9 @@ class SimpleTaskRedactor(SimpleTaskCntWindow):
         manage = GridLayout()
         manage.cols = 3
 
-        manage.add_widget(Button(text='save', on_release=self.on_save))
-        manage.add_widget(Button(text='cancel', on_release=self.cancel))
-        manage.add_widget(Button(text='delete', on_release=self.on_delete))
+        manage.add_widget(Button(text='save', on_release=self.on_save, font_size=42, color=(0, 1, 0, 1)))
+        manage.add_widget(Button(text='cancel', on_release=self.cancel, font_size=42))
+        manage.add_widget(Button(text='delete', on_release=self.on_delete, font_size=42, color=(1, 0, 0, 1)))
         self.content.add_widget(manage)
 
     def on_save(self, instance):

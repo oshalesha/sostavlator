@@ -115,6 +115,8 @@ class Calendar(GridLayout, Image):
 
             for i in range(month_info[0]):
                 self.add_widget(support.empty_space())
+
+            self.current_date_button = None
             for i in range(month_info[1]):
                 day_btn = self.day_button(i + 1)
                 if window.current_date().day == i + 1 and \
@@ -134,7 +136,8 @@ class Calendar(GridLayout, Image):
             return button
 
         def day_reset(self, button):
-            self.current_date_button.color = (1, 0.35, 0, 1)
+            if self.current_date_button is not None:
+                self.current_date_button.color = (1, 0.35, 0, 1)
             self.current_date_button = button
             button.color = (0, 0, 1, 1)
             self.window._set_date(date(self.window.month['year'],

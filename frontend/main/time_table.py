@@ -31,6 +31,7 @@ class TimeTable(GridLayout, Image):
 
     def __redraw(self):
         self.clear_widgets()
+        self.__plan.simple_tasks.sort(key=lambda task: task.get_scheduled())
         # add button
         add_btn = btn.AddSimpleTaskButton(callback=self.update_plan)
         add_btn.size_hint = (1, 2.3)
@@ -47,8 +48,10 @@ class TimeTable(GridLayout, Image):
             self.add_widget(support.empty_space())
 
         # Notes button
-        note_btn = Button()
+        note_btn = support.ButtonText()
         note_btn.text = "open notes"
+        note_btn.color = [0, 0, 0, 1]
+        note_btn.font_size = 28
         note_btn.bind(on_press=self.open_notes)
 
         self.add_widget(note_btn)
