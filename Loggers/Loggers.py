@@ -7,6 +7,8 @@ from os import path
 
 from CellObjects.CellObjects import CheckMarkCell
 from CellObjects.CellObjects import TimeCell
+from CellObjects.CellObjects import Category
+from CellObjects.CellObjects import Importance
 
 
 def note_path(note_name: str = ""):
@@ -233,6 +235,28 @@ class TimeLogger:
         cell = self.__get(year, month, day, name)
         self.remove(cell=cell)
         cell.set_status(status)
+        self.add(cell=cell)
+
+    def set_category(self, name: str = "", year: int = datetime.now().year, month: int = datetime.now().month,
+                     day: int = datetime.now().day, new_category=Category.NONE):
+        cell = self.__get(year, month, day, name)
+        self.remove(cell=cell)
+        cell.set_category(new_category=new_category)
+        self.add(cell=cell)
+
+    def set_importance(self, name: str = "", year: int = datetime.now().year, month: int = datetime.now().month,
+                       day: int = datetime.now().day, new_importance=Importance.NONE):
+        cell = self.__get(year, month, day, name)
+        self.remove(cell=cell)
+        cell.set_importance(new_importance=new_importance)
+        self.add(cell=cell)
+
+    def set_datetime(self, name: str = "", year: int = datetime.now().year, month: int = datetime.now().month,
+                     day: int = datetime.now().day, new_datetime=datetime.now()):
+        new_datetime.replace(microsecond=0)
+        cell = self.__get(year, month, day, name)
+        self.remove(cell=cell)
+        cell.set_scheduled(new_scheduled=str(new_datetime))
         self.add(cell=cell)
 
     def clear(self):

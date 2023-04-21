@@ -60,7 +60,7 @@ class SimpleTaskButton(GridLayout):
 
     def done(self, button):
         callback = pl.RePlanning()
-        new_version = self.__task
+        new_version = self.__task.copy()
         new_version.set_status(not new_version.get_status())
         callback.updated_simple_tasks.append((self.__task, new_version))
         self._callback(callback, redraw=False)

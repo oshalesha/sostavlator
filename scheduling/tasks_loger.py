@@ -43,11 +43,11 @@ class TasksLogger:
         elif isinstance(old, pl.SimpleTask):
             loger = SimpleTaskLogger()
             if old.get_status() != new.get_status():
-                loger.set_status(old.get_action(), new.get_status(),
-                                 old.get_scheduled().month, old.get_scheduled().day)
+                loger.set_status(name=old.get_action(), year=old.get_scheduled().year,
+                                 month=old.get_scheduled().month, day=old.get_scheduled().day, status=new.get_status())
             elif old.get_action() != new.get_action():
-                loger.rename(old.get_action(), new.get_action(),
-                             old.get_scheduled().month, old.get_scheduled().day)
+                loger.rename(old_name=old.get_action(), new_name=new.get_action(), year=old.get_scheduled().year,
+                             month=old.get_scheduled().month, day=old.get_scheduled().day)
             else:
                 # TODO: category and importance and time changes?
                 pass
@@ -68,7 +68,7 @@ class TasksLogger:
     @staticmethod
     def pull_out_notes():
         notes = list()
-        for note_name in NotesManager().get_list():
+        for _ in NotesManager().get_list():
             pass
             # TODO: pull
             # notes.append(pl.Note(note_name, NoteTaskLogger(note_name).))

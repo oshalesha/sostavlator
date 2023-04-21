@@ -78,12 +78,16 @@ class CheckMarkCell(MarkCell):
                              edited=to_time(params_list[3]),
                              status=True if params_list[4] == 'True' else False)
 
+    def copy(self):
+        return CheckMarkCell(*vars(self).values())
+
 
 class Category(Enum):
-    STUDY = 0
-    SPORT = 1
-    WORK = 2
-    HOME = 3
+    NONE = 0
+    STUDY = 1
+    SPORT = 2
+    WORK = 3
+    HOME = 4
 
 
 class Importance(Enum):
@@ -144,3 +148,6 @@ class TimeCell(MarkCell):
 
     def get_ymd(self) -> tuple:
         return self.get_scheduled().year, self.get_scheduled().month, self.get_scheduled().day
+
+    def copy(self):
+        return TimeCell(*vars(self).values())
