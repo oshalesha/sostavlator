@@ -43,8 +43,8 @@ class MarkCell:
         self.__action = new_action
         return self
 
-    def set_edited(self, new_edited: datetime = datetime.now()):
-        self.__edited = new_edited
+    def set_edited(self, new_edited: str = datetime.now()):
+        self.__edited = to_time(new_edited)
         return self
 
     def set_status(self, new_status: bool = False):
@@ -52,7 +52,7 @@ class MarkCell:
             calls = self.__calls_number
             interval = (datetime.now() - self.__edited).total_seconds() / 3600
             self.__period = (calls * self.__period + interval) / (calls + 1)
-            self.__edited = datetime.now()
+            self.__edited = datetime.now().replace(microsecond=0)
             self.__calls_number += 1
         self.__status = new_status
         return self
@@ -128,7 +128,7 @@ class TimeCell(MarkCell):
         return self.__importance
 
     def set_scheduled(self, new_scheduled: str = datetime.now()):
-        self.__scheduled = new_scheduled
+        self.__scheduled = to_time(new_scheduled)
         return self
 
     def set_category(self, new_category: Category = Category.STUDY):
