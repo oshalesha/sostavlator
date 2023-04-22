@@ -1,4 +1,3 @@
-from kivy.uix.button import Button
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
@@ -8,11 +7,11 @@ import frontend.constructors.note_constructors as note_cns
 import frontend.constructors.simple_constructors as simple_cns
 import frontend.design.colors as colors
 import frontend.design.support as support
-from scheduling import planning as pl
+import scheduling.planning as pl
 
 
 class AddSimpleTaskButton(ButtonBehavior, Image):
-    def __init__(self, callback, *args, **kwargs):
+    def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
         self._callback = callback
         self.source = support.plus_image()
@@ -89,12 +88,25 @@ class AddNoteButton(support.ButtonImage):
 #####################################################################
 
 
-class AddNoteTaskButton:
-    pass
-
+class AddNoteTaskButton(support.ButtonImage):
+    def __init__(self, note, callback, **kwargs):
+        super().__init__(**kwargs)
+        self.__callback = callback
+        # TODO: bind with open constructor
 
 #####################################################################
 
 
-class NotetaskButton:
+class NoteLabel(support.ButtonText):
+    def __init__(self, name, callback, **kwargs):
+        super().__init__(**kwargs)
+        self.text = name
+        self.__callback = callback
+        # TODO: bind with open redactor
+
+#####################################################################
+
+
+def note_predictions(tasks_window) -> list:
     pass
+

@@ -79,10 +79,8 @@ class TasksLogger:
     @staticmethod
     def pull_out_notes():
         notes = list()
-        for _ in NotesManager().get_list():
-            pass
-            # TODO: pull
-            # notes.append(pl.Note(note_name, NoteTaskLogger(note_name).))
+        for name in NotesManager().get_list():
+            notes.append(pl.Note(name, NoteTaskLogger(name).get()))
         return notes
 
     @staticmethod

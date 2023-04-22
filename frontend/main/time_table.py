@@ -1,7 +1,7 @@
-from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
+from kivy.uix.label import Label
 
 import frontend.constructors.buttons as btn
 import scheduling.planning as pl
@@ -54,13 +54,13 @@ class TimeTable(GridLayout, Image):
         self.add_widget(note_btn)
 
     def open_notes(self, button):
-        NotesWindow(self.__plan.notes.copy(), callback=self.update_plan).open()
+        NotesTable(self.__plan.notes.copy(), callback=self.update_plan).open()
 
 
 #########################################################################
 
 
-class NotesWindow(Popup):
+class NotesTable(Popup):
     def __init__(self, notes, callback, **kwargs):
         super().__init__(**kwargs)
         self.__notes = notes
@@ -75,11 +75,11 @@ class NotesWindow(Popup):
         self.content.clear_widgets()
 
         for note in self.__notes:
-            self.content.add_widget(self.real_note_button(note))
+            self.content.add_widget(self.open_note_button(note))
 
         # add_button
         if len(self.__notes) < self.content.cols * self.content.rows:
-            add_btn = btn.AddNoteButton(self.callback)
+            add_btn = btn.AddNoteButton(self.update)
             add_btn.source = support.plus_image()
             self.content.add_widget(add_btn)
 
@@ -88,26 +88,65 @@ class NotesWindow(Popup):
             self.content.add_widget(support.empty_space())
 
         # back_button
-        self.content.add_widget(support.ButtonImage(source=support.back_image(), on_release=self.close))
+        self.content.add_widget(support.ButtonImage(source=support.back_image(), on_release=self.dismiss))
 
-    def real_note_button(self, note):
-        btn = Button()
-        btn.text = note.name
-        btn.note = note
-        # TODO: bind with open note
-        return btn
+    def open_note_button(self, note):
+        button = support.ButtonText(text=note.name, color=(0, 0, 0, 1), font_size=32)
+        button.on_release = lambda: NoteWindow(note, callback=self.update).open()
+        return button
 
-    def callback(self, callback, redraw=True):
+    def update(self, callback, redraw=True):
         self.__notes = callback.shape_notes(self.__notes)
         # no need to redraw simple tasks
         self.__callback(callback, redraw=False)
         if redraw:
             self.__redraw()
 
-    def close(self, instance):
-        self.dismiss()
-
 
 #########################################################################
 
 
+class NoteWindow(Popup):
+    def __init__(self, note: pl.Note, callback, **kwargs):
+        super().__init__(**kwargs)
+        self.__note = note
+        self.__callback = callback
+        self.content = support.ImageLayout(rows=2)
+
+        # manage menu
+        back = support.ButtonImage(source=support.back_image())
+        back.on_press = self.dismiss
+
+        manage = support.ImageLayout(cols=3)
+        manage.add_widget(btn.AddNoteTaskButton(note=note, callback=self.update))
+        manage.add_widget(btn.NoteLabel(name=note.name, callback=self.update))
+        manage.add_widget(back)
+
+        # hints + tasks
+        hints_table = GridLayout(rows=2)
+        hints_table.add_widget(Label(text="Perhaps you need it now"))
+        self.hints = GridLayout()
+        hints_table.add_widget(self.hints)
+
+        self.tasks = support.ImageLayout()
+
+        table = GridLayout(cols=2)
+        table.add_widget(hints_table)
+        table.add_widget(self.tasks)
+
+        # push
+        self.content.add_widget(manage)
+        self.content.add_widget(table)
+
+        # draw
+        self.redraw_tasks()
+        self.redraw_hints()
+
+    def update(self, callback):
+        pass
+
+    def redraw_tasks(self):
+        pass
+
+    def redraw_hints(self):
+        pass

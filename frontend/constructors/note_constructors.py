@@ -6,13 +6,6 @@ from kivy.uix.textinput import TextInput
 import scheduling.planning as pl
 
 
-class NoteTaskConstructor:
-    pass
-
-
-##########################################################
-
-
 class NoteConstructor(Popup):
     def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
@@ -39,3 +32,20 @@ class NoteConstructor(Popup):
 
     def cancel(self, button):
         self.dismiss()
+
+##########################################################
+
+
+class NoteRedactor:
+    pass
+
+##########################################################
+
+
+class NoteTaskConstructor:
+    pass
+
+
+##########################################################
+class NoteTaskRedactor:
+    pass
