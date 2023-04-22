@@ -6,9 +6,9 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import OneHotEncoder
 
-from Loggers.Loggers import CheckMarkLogger
-from Loggers.Loggers import OracleLogger
-from Loggers.Loggers import PersonalLogger
+from Loggers.Loggers.Loggers import CheckMarkLogger
+from Loggers.Loggers.Loggers import OracleLogger
+from Loggers.Loggers.Loggers import PersonalLogger
 
 
 class CheckMarkOracle:

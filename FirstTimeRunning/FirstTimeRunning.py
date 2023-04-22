@@ -1,7 +1,7 @@
 from os import path
 
 
-class FirstTimeLogger:
+class FirstTimeRunning:
     def __init__(self):
         self.__dir_name = '__data'
 
