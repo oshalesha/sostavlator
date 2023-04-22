@@ -45,21 +45,21 @@ class TasksLogger:
             if old.get_status() != new.get_status():
                 loger.set_status(name=old.get_action(), year=old.get_scheduled().year,
                                  month=old.get_scheduled().month, day=old.get_scheduled().day, status=new.get_status())
-            elif old.get_action() != new.get_action():
-                loger.rename(old_name=old.get_action(), new_name=new.get_action(), year=old.get_scheduled().year,
-                             month=old.get_scheduled().month, day=old.get_scheduled().day)
-            elif old.get_category() != new.get_category():
+            if old.get_category() != new.get_category():
                 loger.set_category(name=old.get_action(), year=old.get_scheduled().year,
                                    month=old.get_scheduled().month, day=old.get_scheduled().day,
                                    new_category=new.get_category())
-            elif old.get_importance() != new.get_importance():
+            if old.get_importance() != new.get_importance():
                 loger.set_importance(name=old.get_action(), year=old.get_scheduled().year,
                                      month=old.get_scheduled().month, day=old.get_scheduled().day,
                                      new_importance=new.get_importance())
-            elif old.get_scheduled() != new.get_scheduled():
+            if old.get_scheduled() != new.get_scheduled():
                 loger.set_datetime(name=old.get_action(), year=old.get_scheduled().year,
                                    month=old.get_scheduled().month, day=old.get_scheduled().day,
                                    new_datetime=new.get_scheduled())
+            if old.get_action() != new.get_action():
+                loger.rename(old_name=old.get_action(), new_name=new.get_action(), year=old.get_scheduled().year,
+                             month=old.get_scheduled().month, day=old.get_scheduled().day)
         else:
             raise RuntimeError("unknown task in loger update")
 

@@ -172,7 +172,6 @@ class SimpleTaskConstructor(SimpleTaskCntWindow):
         self.pos_hint = {'x': 0.1, 'y': 0}
 
     def on_save(self, instance):
-        # TODO: check if task name is new
         callback = pl.RePlanning()
         task = self.create_task()
         if task is None:
@@ -241,6 +240,7 @@ class SimpleTaskRedactor(SimpleTaskCntWindow):
     def on_save(self, instance):
         callback = pl.RePlanning()
         task = self.create_task()
+        task.set_status(self.__task.get_status())
 
         if task is None:
             # error in user input
