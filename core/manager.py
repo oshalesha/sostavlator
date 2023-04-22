@@ -9,6 +9,7 @@ import scheduling.scheduler as scheduler
 class Manager(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
         self.__scheduler = scheduler.Scheduler()
         self.__table = tb.TimeTable(callback=self.change_in_plan)
         self.__calendar = cld.Calendar(set_date_callback=self.set_date)

@@ -1,23 +1,21 @@
-from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 
 import frontend.design.support as support
-import Loggers.Loggers as loggers
+import Loggers.Loggers.Loggers as loggers
 
 
-class Hello(Popup):
-    def __init__(self, **kwargs):
+class Hello(support.ImageLayout):
+    def __init__(self, end, **kwargs):
         super().__init__(**kwargs)
-        self.content = support.ImageLayout()
-        self.title = ""
-        self.content.rows = 2
-        self.content.add_widget(Label(text="Hi, to improve the hint system, \n"
+        self.rows = 2
+        self.end = end
+        self.add_widget(Label(text="Hi, to improve the hint system, \n"
                                            "our team offers you to answer a few \n"
                                            "simple questions. It won't take long.",
                                       font_size=42, color=(0, 0, 0, 1)))
-        self.content.add_widget(Button(text="go", font_size=84, color=(0, 1, 0, 1), on_press=self.go))
+        self.add_widget(Button(text="go", font_size=84, color=(0, 1, 0, 1), on_press=self.go))
 
         self.sex = 'M'
         self.age = TextInput(hint_text="Your age", font_size=48)
@@ -49,18 +47,18 @@ class Hello(Popup):
         self.reading_btn.value = False
 
     def go(self, instance):
-        self.content = support.ImageLayout()
-        self.content.rows = 5
-        self.content.add_widget(Label(text="Select your sex", color=(0, 0, 0, 1), font_size=48))
+        self.clear_widgets()
+        self.rows = 5
+        self.add_widget(Label(text="Select your sex", color=(0, 0, 0, 1), font_size=48))
 
         sex_manage = support.ImageLayout(cols=2)
         sex_manage.add_widget(self.men_btn)
         sex_manage.add_widget(self.women_btn)
-        self.content.add_widget(sex_manage)
+        self.add_widget(sex_manage)
 
-        self.content.add_widget(self.age)
-        self.content.add_widget(self.free_time)
-        self.content.add_widget(Button(text="next", font_size=64, color=(0, 1, 0, 1), on_press=self.second_step))
+        self.add_widget(self.age)
+        self.add_widget(self.free_time)
+        self.add_widget(Button(text="next", font_size=64, color=(0, 1, 0, 1), on_press=self.second_step))
 
     def men(self, instance):
         self.sex = 'M'
@@ -87,17 +85,17 @@ class Hello(Popup):
             support.error_window("it seems you entered the wrong free time")
             return
 
-        self.content.clear_widgets()
-        self.content.rows = 9
-        self.content.add_widget(Label(text="Choose your interests", color=(0, 0, 0, 1), font_size=48))
-        self.content.add_widget(self.studying_btn)
-        self.content.add_widget(self.activities_btn)
-        self.content.add_widget(self.sport_btn)
-        self.content.add_widget(self.work_btn)
-        self.content.add_widget(self.movies_btn)
-        self.content.add_widget(self.art_btn)
-        self.content.add_widget(self.reading_btn)
-        self.content.add_widget(support.ButtonText(text="finish", font_size=64,
+        self.clear_widgets()
+        self.rows = 9
+        self.add_widget(Label(text="Choose your interests", color=(0, 0, 0, 1), font_size=48))
+        self.add_widget(self.studying_btn)
+        self.add_widget(self.activities_btn)
+        self.add_widget(self.sport_btn)
+        self.add_widget(self.work_btn)
+        self.add_widget(self.movies_btn)
+        self.add_widget(self.art_btn)
+        self.add_widget(self.reading_btn)
+        self.add_widget(support.ButtonText(text="finish", font_size=64,
                                                    color=(0, 1, 0, 1), on_press=self.finish))
 
     def change_choose(self, instance):
@@ -121,4 +119,4 @@ class Hello(Popup):
                                picked_work=self.work_btn.value, picked_studying=self.studying_btn.value,
                                picked_sports=self.sport_btn.value, picked_reading=self.reading_btn.value,
                                picked_activities=self.activities_btn.value)
-        self.dismiss()
+        self.end()
