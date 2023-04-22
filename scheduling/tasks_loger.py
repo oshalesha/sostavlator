@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime, date
 
 import scheduling.planning as pl
 from Loggers.Loggers import CheckMarkLogger as NoteTaskLogger, TimeLogger as SimpleTaskLogger, NotesManager
@@ -48,9 +48,20 @@ class TasksLogger:
             elif old.get_action() != new.get_action():
                 loger.rename(old_name=old.get_action(), new_name=new.get_action(), year=old.get_scheduled().year,
                              month=old.get_scheduled().month, day=old.get_scheduled().day)
-            else:
-                # TODO: category and importance and time changes?
-                pass
+            elif old.get_category() != new.get_category():
+                loger.set_category(name=old.get_action(), year=old.get_scheduled().year,
+                                   month=old.get_scheduled().month, day=old.get_scheduled().day,
+                                   new_category=new.get_category())
+            elif old.get_importance() != new.get_importance():
+                loger.set_importance(name=old.get_action(), year=old.get_scheduled().year,
+                                     month=old.get_scheduled().month, day=old.get_scheduled().day,
+                                     new_importance=new.get_importance())
+            elif old.get_scheduled() != new.get_scheduled():
+                loger.set_datetime(name=old.get_action(), year=old.get_scheduled().year,
+                                   month=old.get_scheduled().month, day=old.get_scheduled().day,
+                                   new_datetime=datetime(old.get_scheduled().year, old.get_scheduled().month,
+                                                         old.get_scheduled().day, hour=new.get_scheduled().hour,
+                                                         second=new.get_scheduled().second))
         else:
             raise RuntimeError("unknown task in loger update")
 

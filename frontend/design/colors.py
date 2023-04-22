@@ -11,7 +11,6 @@ def task_category_color(cat):
         return 1, 1, 0, 1
 
 
-
 def task_importance_color(imp):
     if imp == 0:
         return 1, 1, 1, 1

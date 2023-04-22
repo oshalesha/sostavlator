@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from kivy.app import App
 
 import core.manager as mn

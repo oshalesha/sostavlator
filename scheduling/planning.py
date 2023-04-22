@@ -55,7 +55,7 @@ class RePlanning:
         plan.notes = self.shape_notes(plan.notes)
         return plan
 
-    def shape_notes(self, notes):
+    def shape_notes(self, notes: list):
         for name in self.added_notes:
             notes.append(Note(name=name, tasks=list()))
 
