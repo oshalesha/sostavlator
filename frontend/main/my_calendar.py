@@ -1,7 +1,6 @@
 from calendar import monthrange, month_name
 from datetime import date
 
-from kivy.uix.button import Button
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
