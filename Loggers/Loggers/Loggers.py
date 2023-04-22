@@ -1,14 +1,14 @@
-import csv
+import itertools
 import os
-import pickle
 import shutil
 from datetime import datetime
-from os import path
 
-from CellObjects.CellObjects import CheckMarkCell
-from CellObjects.CellObjects import TimeCell
 from CellObjects.CellObjects import Category
+from CellObjects.CellObjects import CheckMarkCell
 from CellObjects.CellObjects import Importance
+from CellObjects.CellObjects import TimeCell
+from Loggers.Readers.Readers import CSVReader
+from Loggers.Readers.Readers import PickleReader
 
 
 def note_path(note_name: str = ""):
@@ -23,67 +23,37 @@ def to_time_mark(yanked):
     return [TimeCell(params_list=row) for row in yanked]
 
 
-class Reader:
-    def __init__(self, file_name: str = ""):
-        self.__file_name = file_name
-        os.makedirs(os.path.dirname(self.__file_name), exist_ok=True)
-        if not path.exists(self.__file_name):
-            with open(self.__file_name, 'x'):
-                pass
-
-    def read(self) -> list:
-        with open(self.__file_name, mode='r') as f:
-            yanked = [row for row in csv.reader(f)]
-        return yanked
-
-    def write(self, record: list):
-        got = self.read()
-        got.append(record)
-        with open(self.__file_name, mode='w') as f:
-            writer = csv.writer(f)
-            writer.writerows(got)
-
-    def write_list(self, records: list):
-        with open(self.__file_name, mode='w') as f:
-            writer = csv.writer(f)
-            writer.writerows(records)
-
-
 class NotesManager:
     def __init__(self):
         self.__file_name = '__data/__notes.csv'
-        self.__reader = Reader(file_name='__data/__notes.csv')
+        self.__reader = CSVReader(file_name='__data/__notes.csv')
 
-    def get_list(self) -> list:
+    def __get_list(self) -> list:
         return self.__reader.read()
 
-    def get(self) -> list:
-        got = self.get_list()
-        result = list()
-        for item in got:
-            result.append(item[0])
-        return result
+    def get_list(self) -> list:
+        return list(itertools.chain.from_iterable(self.__reader.read()))
 
     def __exists(self, name: str = ""):
-        got = self.get_list()
+        got = self.__get_list()
         for pos in range(len(got)):
             if got[pos] == [name]:
                 return pos
         return None
 
     def remove(self, name: str = ""):
-        got = self.get_list()
+        got = self.__get_list()
         index = self.__exists(name=name)
         del got[index]
         self.__reader.write_list(records=got)
         os.remove(note_path(note_name=name))
 
     def add(self, name: str = ""):
-        got = self.get_list()
+        got = self.__get_list()
         if self.__exists(name=name) is None:
             got.append([name])
             self.__reader.write_list(records=got)
-            Reader(file_name=note_path(name))
+            CSVReader(file_name=note_path(name))
 
     def clear(self):
         self.__reader.write_list([])  # what the heck
@@ -93,7 +63,7 @@ class NotesManager:
 class CheckMarkLogger:  # should be a child of the abstract class 'Logger'
     def __init__(self, note_name: str = ""):
         self.__file_name = '__data/__check_marks/' + note_name + '.csv'
-        self.__reader = Reader(file_name=self.__file_name)
+        self.__reader = CSVReader(file_name=self.__file_name)
         notes_manager = NotesManager()
         notes_manager.add(note_name)
 
@@ -162,23 +132,26 @@ class TimeLogger:
     def get_dir_name(self) -> str:
         return self.__dir_name
 
+    def __get_dir_path(self, year: int = datetime.now().year, month: int = datetime.now().month) -> str:
+        return self.get_dir_name() + '/' + str(year) + '/' + str(month) + '/'
+
     def __get_path_ymd(self, year: int = datetime.now().year, month: int = datetime.now().month, day: int = 1) -> str:
-        return self.get_dir_name() + '/' + str(year) + '/' + str(month) + '/' + str(day) + '.csv'
+        return self.__get_dir_path(year, month) + str(day) + '.csv'
 
     def __get_path_cell(self, cell: TimeCell) -> str:
         return self.__get_path_ymd(cell.get_scheduled().year, cell.get_scheduled().month, cell.get_scheduled().day)
 
     def get_for_month(self, year: int = datetime.now().year, month: int = datetime.now().month) -> list:
         result = []
-        name = self.get_dir_name() + '/' + str(year) + '/' + str(month) + '/'
+        name = self.__get_dir_path(year, month)
         for file in os.listdir(name):
-            reader = Reader(name + file)
+            reader = CSVReader(name + file)
             result += to_time_mark(reader.read())
         return result
 
     def __get_as_lists(self, year: int = datetime.now().year, month: int = datetime.now().month,
                        day: int = datetime.now().day) -> list:
-        reader = Reader(self.__get_path_ymd(year, month, day))
+        reader = CSVReader(self.__get_path_ymd(year, month, day))
         return reader.read()
 
     def __get_tuple(self, year: int = datetime.now().year, month: int = datetime.now().month,
@@ -207,7 +180,7 @@ class TimeLogger:
         index, got = self.__get_tuple(*cell.get_ymd_act())
         removed = got[index]
         del got[index]
-        reader = Reader(self.__get_path_cell(cell))
+        reader = CSVReader(self.__get_path_cell(cell))
         reader.write_list(records=got)
         return removed
 
@@ -216,7 +189,7 @@ class TimeLogger:
         if not self.exists(*cell.get_ymd_act()):
             OracleLogger().update(cell.get_action())
             got.append(cell.to_list())
-            reader = Reader(self.__get_path_cell(cell))
+            reader = CSVReader(self.__get_path_cell(cell))
             reader.write_list(got)
 
     def rename(self, old_name: str = "", new_name: str = "", year: int = datetime.now().year,
@@ -266,31 +239,25 @@ class TimeLogger:
                 os.remove(name + '/' + direct + '/' + file)
 
 
-class OracleLogger:  # don't use it
+class OracleLogger:
     def __init__(self):
         self.__file_name = "__data/__oracle.pickle"
-        os.makedirs(os.path.dirname(self.__file_name), exist_ok=True)
-        if not os.path.exists(self.__file_name):
-            with open(self.__file_name, mode='wb'):
-                self.__dump(loaded=dict())
+        self.__reader = PickleReader(self.__file_name)
 
     def get(self):
-        with open(self.__file_name, 'rb') as f:
-            loaded = pickle.load(f)
-        return loaded
+        return self.__reader.read()
 
     def get_five(self):
         got = self.get()
         return [k for k, v in sorted(got.items(), key=lambda item: item[1], reverse=True)][:min(len(got), 5)]
 
-    def __dump(self, loaded: dict = None):
-        with open(self.__file_name, 'wb') as f:
-            pickle.dump(loaded, f)
+    def write(self, loaded: dict = None):
+        self.__reader.write(loaded)
 
     def update(self, key: str = ""):
         loaded = self.get()
         loaded[key] = loaded.get(key, 0) + 1
-        self.__dump(loaded)
+        self.write(loaded)
 
     def empty(self) -> bool:
         got = self.get()
@@ -303,26 +270,22 @@ class PersonalLogger:  # use it only once
                  picked_studying: bool = True, picked_activities: bool = False, picked_sports: bool = True,
                  picked_work: bool = True):
         self.__file_name = "__data/__personal.pickle"
-        os.makedirs(os.path.dirname(self.__file_name), exist_ok=True)
-        if not os.path.exists(self.__file_name):
-            with open(self.__file_name, mode='wb'):
-                self.__dump(loaded=dict({'sex': sex, 'age': age, 'free_time': free_time, 'picked_movies': picked_movies,
-                                         'picked_reading': picked_reading, 'picked_art': picked_art,
-                                         'picked_studying': picked_studying, 'picked_activities': picked_activities,
-                                         'picked_sports': picked_sports, 'picked_work': picked_work}))
+        self.__reader = PickleReader(self.__file_name)
+        loaded = dict({'sex': sex, 'age': age, 'free_time': free_time, 'picked_movies': picked_movies,
+                       'picked_reading': picked_reading, 'picked_art': picked_art,
+                       'picked_studying': picked_studying, 'picked_activities': picked_activities,
+                       'picked_sports': picked_sports, 'picked_work': picked_work})
+        self.__reader.write(loaded)
 
-    def __dump(self, loaded: dict = None):
-        with open(self.__file_name, 'wb') as f:
-            pickle.dump(loaded, f)
+    def write(self, loaded: dict = None):
+        self.__reader.write(loaded)
 
     def get(self):
-        with open(self.__file_name, 'rb') as f:
-            loaded = pickle.load(f)
-        return loaded
+        return self.__reader.read()
 
     def empty(self) -> bool:
         got = self.get()
         return len(got) == 0
 
     def clear(self):
-        self.__dump(loaded=dict())
+        self.write(loaded=dict())
