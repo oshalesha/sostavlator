@@ -33,7 +33,7 @@ def black_line():
     return Image(source=images + 'black_line.png')
 
 
-def task_status_image(task: pl.SimpleTask):
+def simple_task_status_image(task: pl.SimpleTask):
     file = ""
     imp = task.get_importance().value
     if task.get_status():
@@ -47,6 +47,12 @@ def task_status_image(task: pl.SimpleTask):
     else:
         file = 'red_circle.png'
     return images + file
+
+
+def note_tasks_status_image(task: pl.NoteTask):
+    if task.get_status():
+        return images + 'done.png'
+    return images + 'white_circle.png'
 
 
 def plus_image():

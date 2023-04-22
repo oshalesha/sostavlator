@@ -33,7 +33,7 @@ class SimpleTaskButton(GridLayout):
 
         # done button
         done_button = support.ButtonImage()
-        done_button.source = support.task_status_image(task)
+        done_button.source = support.simple_task_status_image(task)
         done_button.size_hint = (0.25, 1)
         done_button.bind(on_press=self.done)
         self.done_button = done_button
@@ -64,7 +64,7 @@ class SimpleTaskButton(GridLayout):
         callback.updated_simple_tasks.append((self.__task, new_version))
         self._callback(callback, redraw=False)
         self.__task.set_status(new_version.get_status())
-        self.done_button.source = support.task_status_image(self.__task)
+        self.done_button.source = support.simple_task_status_image(self.__task)
 
     def task_config(self, button):
         simple_cns.SimpleTaskRedactor(callback=self.callback, task=self.__task).open()
@@ -88,11 +88,42 @@ class AddNoteButton(support.ButtonImage):
 #####################################################################
 
 
+class NoteTaskButton(support.ImageLayout):
+    def __init__(self, note: pl.Note, task: pl.NoteTask, callback, **kwargs):
+        super().__init__(**kwargs)
+        self.__task = task
+        self.__callback = callback
+        self.__note = note
+        self.cols = 2
+
+        done_btn = support.ButtonImage()
+        done_btn.on_press = self.done
+        done_btn.source = support.note_tasks_status_image(self.__task)
+        self.add_widget(done_btn)
+
+        note_redact_btn = support.ButtonText()
+        note_redact_btn.on_press = self.config
+        note_redact_btn.text = task.get_action()
+
+    def update(self, callback):
+        pass
+
+    def done(self):
+        pass
+
+    def config(self):
+        pass
+
+
+#####################################################################
+
+
 class AddNoteTaskButton(support.ButtonImage):
     def __init__(self, note, callback, **kwargs):
         super().__init__(**kwargs)
         self.__callback = callback
         # TODO: bind with open constructor
+
 
 #####################################################################
 
