@@ -128,7 +128,7 @@ class TimeCell(MarkCell):
         return self.__importance
 
     def set_scheduled(self, new_scheduled: str = datetime.now()):
-        self.__scheduled = new_scheduled
+        self.__scheduled = to_time(new_scheduled)
         return self
 
     def set_category(self, new_category: Category = Category.STUDY):
