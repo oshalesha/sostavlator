@@ -1,14 +1,15 @@
 import csv
+import itertools
 import os
 import pickle
 import shutil
 from datetime import datetime
 from os import path
 
-from CellObjects.CellObjects import CheckMarkCell
-from CellObjects.CellObjects import TimeCell
 from CellObjects.CellObjects import Category
+from CellObjects.CellObjects import CheckMarkCell
 from CellObjects.CellObjects import Importance
+from CellObjects.CellObjects import TimeCell
 
 
 def note_path(note_name: str = ""):
@@ -54,32 +55,28 @@ class NotesManager:
         self.__file_name = '__data/__notes.csv'
         self.__reader = Reader(file_name='__data/__notes.csv')
 
-    def get_list(self) -> list:
+    def __get_list(self) -> list:
         return self.__reader.read()
 
-    def get(self) -> list:
-        got = self.get_list()
-        result = list()
-        for item in got:
-            result.append(item[0])
-        return result
+    def get_list(self) -> list:
+        return list(itertools.chain.from_iterable(self.__reader.read()))
 
     def __exists(self, name: str = ""):
-        got = self.get_list()
+        got = self.__get_list()
         for pos in range(len(got)):
             if got[pos] == [name]:
                 return pos
         return None
 
     def remove(self, name: str = ""):
-        got = self.get_list()
+        got = self.__get_list()
         index = self.__exists(name=name)
         del got[index]
         self.__reader.write_list(records=got)
         os.remove(note_path(note_name=name))
 
     def add(self, name: str = ""):
-        got = self.get_list()
+        got = self.__get_list()
         if self.__exists(name=name) is None:
             got.append([name])
             self.__reader.write_list(records=got)
