@@ -14,7 +14,7 @@ class TimeTable(GridLayout, Image):
         self.__callback = callback
         self.__tasks__max = 9
         # tasks + add_button + open_notes_button
-        self.rows = self.__tasks__max + 2
+        self.rows = self.__tasks__max + 1
 
         self.__plan = pl.Plan()
         self.__redraw()
@@ -47,11 +47,11 @@ class TimeTable(GridLayout, Image):
         for i in range(self.__tasks__max - len(self.__plan.simple_tasks)):
             self.add_widget(support.black_line())
 
-        # Notes button
+        '''# Notes button
         note_btn = support.ButtonText(text="open notes", color=[0, 0, 0, 1], font_size=46, size_hint=(1, 1.4))
         note_btn.bind(on_press=self.open_notes)
 
-        self.add_widget(note_btn)
+        self.add_widget(note_btn)'''
 
     def open_notes(self, button):
         NotesTable(self.__plan.notes.copy(), callback=self.update_plan).open()
@@ -142,8 +142,16 @@ class NoteWindow(Popup):
         self.redraw_tasks()
         self.redraw_hints()
 
-    def update(self, callback):
-        pass
+    def update(self, callback, close=True, redraw_tasks=True, redraw_hints=True):
+        self.__note = callback.shape_notes([self.__note])[0]
+        self.__callback(callback)
+        if close:
+            self.dismiss()
+            return
+        if redraw_tasks:
+            self.redraw_tasks()
+        if redraw_hints:
+            self.redraw_hints()
 
     def redraw_tasks(self):
         pass
