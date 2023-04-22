@@ -59,9 +59,7 @@ class TasksLogger:
             elif old.get_scheduled() != new.get_scheduled():
                 loger.set_datetime(name=old.get_action(), year=old.get_scheduled().year,
                                    month=old.get_scheduled().month, day=old.get_scheduled().day,
-                                   new_datetime=datetime(old.get_scheduled().year, old.get_scheduled().month,
-                                                         old.get_scheduled().day, hour=new.get_scheduled().hour,
-                                                         second=new.get_scheduled().second))
+                                   new_datetime=new.get_scheduled())
         else:
             raise RuntimeError("unknown task in loger update")
 
