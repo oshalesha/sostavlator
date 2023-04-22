@@ -135,7 +135,7 @@ class SimpleTaskCntWindow(Popup):
 
     def update_category(self):
         self._category_btn.text = category_name(self._category)
-        self._category_btn.color = colors.task_category_color(self._category)
+        self._category_btn.color = colors.task_category_color(self._category, theme="black")
 
     def cancel(self, instance):
         self.dismiss()

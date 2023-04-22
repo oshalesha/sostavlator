@@ -1,6 +1,9 @@
-def task_category_color(cat):
+def task_category_color(cat, theme: str):
     if cat == 0:
-        return 1, 1, 1, 1
+        if theme == "black":
+            return 1, 1, 1, 1
+        else:
+            return 0, 0, 0, 1
     elif cat == 1:
         return 1, 0, 0, 1
     elif cat == 2:

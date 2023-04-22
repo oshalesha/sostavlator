@@ -43,7 +43,7 @@ class SimpleTaskButton(GridLayout):
         # task button
         task_button = support.ButtonText()
         task_button.text = task.get_action()
-        task_button.color = colors.task_category_color(self.__task.get_category().value)
+        task_button.color = colors.task_category_color(self.__task.get_category().value, theme="white")
         task_button.font_size = 28
         task_button.bind(on_release=self.task_config)
         self.task_button = task_button
@@ -77,7 +77,7 @@ class SimpleTaskButton(GridLayout):
 #####################################################################
 
 
-class AddNoteButton(Button):
+class AddNoteButton(support.ButtonImage):
     def __init__(self, callback, **kwargs):
         super().__init__(**kwargs)
         self.__callback = callback

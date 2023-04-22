@@ -1,4 +1,5 @@
 from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
@@ -28,6 +29,10 @@ def error_window(error: str):
     window.open()
 
 
+def black_line():
+    return Image(source=images + 'black_line.png')
+
+
 def task_status_image(task: pl.SimpleTask):
     file = ""
     imp = task.get_importance().value
@@ -48,10 +53,18 @@ def plus_image():
     return images + 'plus.jpg'
 
 
+def back_image():
+    return images + 'back.png'
+
+
 class ButtonImage(ButtonBehavior, Image):
     pass
 
 
 class ButtonText(ButtonBehavior, Label):
+    pass
+
+
+class ImageLayout(GridLayout, Image):
     pass
 

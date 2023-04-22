@@ -36,7 +36,7 @@ class TimeTable(GridLayout, Image):
         add_btn = btn.AddSimpleTaskButton(callback=self.update_plan)
         add_btn.size_hint = (1, 2.3)
         if len(self.__plan.simple_tasks) == self.__tasks__max:
-            add_btn.on_press = (lambda : support.error_window("Sorry, you reach limit for tasks"))
+            add_btn.on_press = (lambda: support.error_window("Sorry, you reach limit for tasks"))
         self.add_widget(add_btn)
 
         # real tasks
@@ -45,7 +45,7 @@ class TimeTable(GridLayout, Image):
 
         # empty spaces
         for i in range(self.__tasks__max - len(self.__plan.simple_tasks)):
-            self.add_widget(support.empty_space())
+            self.add_widget(support.black_line())
 
         # Notes button
         note_btn = support.ButtonText(text="open notes", color=[0, 0, 0, 1], font_size=46, size_hint=(1, 1.4))
@@ -66,7 +66,7 @@ class NotesWindow(Popup):
         self.__notes = notes
         self.__callback = callback
 
-        self.content = GridLayout()
+        self.content = support.ImageLayout()
         self.content.cols = 3
         self.content.rows = 2
         self.__redraw()
@@ -80,13 +80,15 @@ class NotesWindow(Popup):
         # add_button
         if len(self.__notes) < self.content.cols * self.content.rows:
             add_btn = btn.AddNoteButton(self.callback)
-            add_btn.text = "add"
+            add_btn.source = support.plus_image()
             self.content.add_widget(add_btn)
 
         # empty_spaces
         for i in range(self.content.cols * self.content.rows - 2 - len(self.__notes)):
             self.content.add_widget(support.empty_space())
-        self.content.add_widget(Button(text="close", on_release=self.close))
+
+        # back_button
+        self.content.add_widget(support.ButtonImage(source=support.back_image(), on_release=self.close))
 
     def real_note_button(self, note):
         btn = Button()
@@ -104,3 +106,8 @@ class NotesWindow(Popup):
 
     def close(self, instance):
         self.dismiss()
+
+
+#########################################################################
+
+
