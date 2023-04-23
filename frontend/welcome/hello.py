@@ -12,12 +12,12 @@ class Hello(support.ImageLayout):
         self.rows = 2
         self.end = end
         self.add_widget(Label(text="Hi, to improve the hint system, \n"
-                                           "our team offers you to answer a few \n"
-                                           "simple questions. It won't take long.",
-                                      font_size=42, color=(0, 0, 0, 1)))
+                                   "our team offers you to answer a few \n"
+                                   "simple questions. It won't take long.",
+                              font_size=42, color=(0, 0, 0, 1)))
         self.add_widget(Button(text="go", font_size=84, color=(0, 1, 0, 1), on_press=self.go))
 
-        self.sex = 'M'
+        self.sex = 'М'
         self.age = TextInput(hint_text="Your age", font_size=48)
         self.free_time = TextInput(hint_text="Free time from 0 to 10", font_size=48)
 
@@ -61,14 +61,14 @@ class Hello(support.ImageLayout):
         self.add_widget(Button(text="next", font_size=64, color=(0, 1, 0, 1), on_press=self.second_step))
 
     def men(self, instance):
-        self.sex = 'M'
+        self.sex = 'М'
         self.men_btn.color = (1, 0, 0, 1)
         self.men_btn.font_size = 48
         self.women_btn.color = (0, 0, 0, 1)
         self.women_btn.font_size = 38
 
     def women(self, instance):
-        self.sex = 'W'
+        self.sex = 'Ж'
         self.men_btn.color = (0, 0, 0, 1)
         self.men_btn.font_size = 38
         self.women_btn.color = (1, 0, 0, 1)
@@ -96,7 +96,7 @@ class Hello(support.ImageLayout):
         self.add_widget(self.art_btn)
         self.add_widget(self.reading_btn)
         self.add_widget(support.ButtonText(text="finish", font_size=64,
-                                                   color=(0, 1, 0, 1), on_press=self.finish))
+                                           color=(0, 1, 0, 1), on_press=self.finish))
 
     def change_choose(self, instance):
         instance.value = not instance.value
@@ -114,9 +114,12 @@ class Hello(support.ImageLayout):
         btn.color = (0, 0, 0, 1)
 
     def finish(self, instance):
-        loggers.PersonalLogger(sex=self.sex, age=int(self.age.text), free_time=float(self.age.text)/10,
-                               picked_movies=self.movies_btn.value, picked_art=self.art_btn.value,
-                               picked_work=self.work_btn.value, picked_studying=self.studying_btn.value,
-                               picked_sports=self.sport_btn.value, picked_reading=self.reading_btn.value,
-                               picked_activities=self.activities_btn.value)
+        loggers.PersonalLogger().write_features(sex=self.sex, age=int(self.age.text),
+                                                free_time=float(self.free_time.text) / 10,
+                                                picked_movies=self.movies_btn.value, picked_art=self.art_btn.value,
+                                                picked_work=self.work_btn.value,
+                                                picked_studying=self.studying_btn.value,
+                                                picked_sports=self.sport_btn.value,
+                                                picked_reading=self.reading_btn.value,
+                                                picked_activities=self.activities_btn.value)
         self.end()

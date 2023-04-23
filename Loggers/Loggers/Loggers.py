@@ -265,12 +265,14 @@ class OracleLogger:
 
 
 class PersonalLogger:  # use it only once
-    def __init__(self, sex: str = 'М', age: int = 19, free_time: float = 0.1, picked_movies: bool = True,
-                 picked_reading: bool = False, picked_art: bool = True,
-                 picked_studying: bool = True, picked_activities: bool = False, picked_sports: bool = True,
-                 picked_work: bool = True):
+    def __init__(self):
         self.__file_name = "__data/__personal.pickle"
         self.__reader = PickleReader(self.__file_name)
+
+    def write_features(self, sex: str = 'М', age: int = 19, free_time: float = 0.1, picked_movies: bool = True,
+                       picked_reading: bool = False, picked_art: bool = True,
+                       picked_studying: bool = True, picked_activities: bool = False, picked_sports: bool = True,
+                       picked_work: bool = True):
         loaded = dict({'sex': sex, 'age': age, 'free_time': free_time, 'picked_movies': picked_movies,
                        'picked_reading': picked_reading, 'picked_art': picked_art,
                        'picked_studying': picked_studying, 'picked_activities': picked_activities,

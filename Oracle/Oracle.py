@@ -62,6 +62,7 @@ class TimeOracle:
     def predict(self) -> list:
         got = self.__logger.get_five()
         if len(got) < 5:
+            mama = self.__personal_logger.get()
             predicted = self.__ganglion.predict(self.__personal_logger.get())
             predicted_list = [k for k, v in
                               sorted(predicted.items(), key=lambda item: item[1], reverse=True)[
