@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
@@ -10,7 +12,6 @@ import frontend.design.support as support
 import frontend.design.colors as colors
 import Oracle.Oracle as orcl
 
-from datetime import datetime
 
 
 def importance_name(importance):
