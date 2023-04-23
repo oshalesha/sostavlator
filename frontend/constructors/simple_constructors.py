@@ -51,7 +51,7 @@ class SimpleTaskCntWindow(Popup):
         # create main part
         self._task_name = TextInput(multiline=False)
         self._task_name.hint_text = "name your task"
-        self._task_name.font_size = 42
+        self._task_name.font_size = 32
 
         self._category = 0
         self._importance = 0
