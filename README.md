@@ -1,56 +1,51 @@
-# СОСТАВЛЯТОР
+# SOSTAVLATOR
 
-```Составлятор``` - это приложение, которое позволяет создавать расписание, используя предлагаемые подсказки.
+```Sostavlator``` is an application that allows you to create a schedule using suggested prompts.
 
-## Функционал
+## Functions
 
-## `Начало работы`
-При первом запуске Ваc попросят ответить на несколько простых вопросов, чтобы кастомизировать подсказки 
-специально под вас. Наше приложение сопоставит ваши ответы с информацией, собранной нами с помощью опроса. 
-Опрос небольшой, но он сделает ваше будущее использование приложения гораздо приятней.
+## `Getting Started`
+When you first launch, you will be asked to answer a few simple questions to customize the tips
+specifically for you. Our app will compare your answers with the information we collected through a survey.
+The survey is short, but it will make your future use of the app much more enjoyable.
 
 
-## `Главное меню`
-Главное меню имеет следующий вид:
+## `Main menu`
+The main menu looks like this:
 
 ![tutorial_1](frontend/design/pictures/tutorial_1.jpg)
 
 
-Вы можете выбрать день, на который делаете расписание, создавать на этот день задачи, редактировать их, 
-отмечать выполненные. Цвет кружка возле задачи определяет ее важность, цвет самой задачи - ее категорию. Удаление
-задачи доступно в режиме ее редактирования.
+You can select the day for which you are making a schedule, create tasks for this day, edit them, and mark them as completed. The color of the circle next to the task determines its importance, the color of the task itself determines its category. Deleting a task is available in its editing mode.
 
+## `Creating a task`
 
-## `Создание задачи`
-
-При создании вы вводите имя задачи, определяете ее категорию и важность, а так же желанное время. Не беспокойтесь
-о том, чтобы вбить что-то неправильно - приложение само подскажет вам в случае ошибки. Справа находятся кнопки с
-подсказками - при нажатии имя задачи вписывается в строку имени.
+When creating, you enter the name of the task, define its category and importance, as well as the desired time. Do not worry
+about entering something incorrectly - the application itself will prompt you in case of an error. On the right are buttons with
+hints - when pressed, the task name is entered into the name line.
 
 ![tutorial_2](frontend/design/pictures/tutorial_2.jpg)
 
-## Система подсказок
+## `Suggestion system`
 
-Если вы составляете расписание и не успели внести туда достаточно различных занятий, то ```Составлятор``` 
-будет подсказывать те занятия, которыми бы вы скорее всего предпочли заняться на основе линейной регрессии, 
-базирующейся на ваших характеристиках.
+If you are making a schedule and have not managed to include enough different activities, then ```Compiler``` will suggest the activities that you would most likely prefer to do based on a ML algorithm, based on your characteristics.
 
-Не стоит переживать, если первое время приложение будет подсказывать вам, казалось бы, произвольные задачи. Со временем
-оно будет учиться и подстраиваться под вас. Чем дольше вы пользуетесь приложением, тем точнее становятся подсказки
+Don't worry if the app prompts you with seemingly arbitrary tasks at first. Over time,
+it will learn and adapt to you. The longer you use the app, the more accurate the prompts become
 
 
-## Установка
+## `Installation`
 
-Для запуска приложения достаточно клонировать репозиторий, скачать все необходимые библиотеки - 
-здесь самое простое решение - написать ```pip install -r requirements.txt``` из корня репозитория. Далее достаточно
-просто запускать файл [main.py](main.py).
+To run the application, just clone the repository, download all the necessary libraries -
+the simplest solution here is to write ```pip install -r requirements.txt``` from the repository root. Then, just run the [main.py](main.py) file.
 
-Пользователям linux стоит закомментировать строчку ```%(name)s = probesysfs``` в разделе ```[input]```
-в файле ```~/.kivy/config.ini```. 
-Это из-за довольно [странного давно известного поведения kivy](https://stackoverflow.com/questions/59963631/python-kivy-on-press-being-executed-twice).
+Linux users should comment out the line ```%(name)s = probesysfs``` in the ```[input]``` section
+in the ```~/.kivy/config.ini``` file.
+
+This is due to a rather [strange, long-known behavior of kivy](https://stackoverflow.com/questions/59963631/python-kivy-on-press-being-executed-twice).
 
 
-## Будущее
+## `Future`
 
-Сейчас также разрабатываются задачи-списки, которые не будут зависеть ото дня, со своей системой подсказок: предлагать
-объекты, которые давно не отмечались выполненными. Идеальный пример его применения - список продуктов.
+To-do lists are also being developed now, which will not depend on the day, with their own system of hints: to suggest
+objects that have not been marked as completed for a long time. An ideal example of its application is a grocery list.
